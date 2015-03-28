@@ -64,7 +64,10 @@ public class MainActivity extends ActionBarActivity
 			{
 				consoleTextView.append(contents + "\n");
 			}
-			consoleTextView.append("Scan Error");
+            else
+            {
+                consoleTextView.append("Scan Error");
+            }
 		}
 		else
 		{
