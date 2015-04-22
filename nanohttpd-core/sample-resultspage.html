@@ -1,13 +1,60 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html>
     <head>
         <meta charset="utf-8">
         <title>Attendance Results</title>
         
+        <style>
+          html {
+            background-color: #1c3452;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+           }
+          h1 {
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+          }
+          table {
+            border: 1px solid white;
+          }
+          .tableheader{
+            background-color: #a30204;
+          }
+          td {
+            width=33%;
+          }
+        </style>
+        
     </head>
     <body>
-        <h1> Results for $date </h1>
-		
+      <h1> Attendance for $date </h1>
+      
+      <table>
+        <thead>
+          <tr class="tableheader">
+            <td>
+              Student ID
+            </td>
+            <td>
+              In Time
+            </td>
+            <td>
+              Out Time
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              783974
+            </td>
+            <td>
+              3:07
+            </td>
+            <td>
+              4:39
+            </td>
+          </tr>
+      </table>
         
     </body>
 </html>
