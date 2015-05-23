@@ -33,8 +33,8 @@ public class StudentsCursorAdaptor extends CursorAdapter
 		TextView firstNameView = (TextView) view.findViewById(R.id.firstNameTextView);
 		TextView lastNameView = (TextView) view.findViewById(R.id.lastNameTextView);
 
-		studentIDView.setText(Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow(Tables.Students.COLUMN_NAME_STUDENT_ID))));
-		firstNameView.setText(cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.COLUMN_NAME_FIRST_NAME)));
-		studentIDView.setText(cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.COLUMN_NAME_LAST_NAME)));
+		studentIDView.setText(Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_ID))));
+		firstNameView.setText(cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_FIRST_NAME)));
+		studentIDView.setText(cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_LAST_NAME)));
 	}
 }
