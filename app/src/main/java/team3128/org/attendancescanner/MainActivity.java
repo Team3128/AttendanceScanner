@@ -12,12 +12,16 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import team3128.org.attendancescanner.database.AttendanceDatabase;
+
 
 public class MainActivity extends ActionBarActivity
 {
 	public TextView consoleTextView;
 
 	public Button scanButton;
+
+	public AttendanceDatabase database;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -35,6 +39,8 @@ public class MainActivity extends ActionBarActivity
 				invokeScan();
 			}
 		});
+
+		database = new AttendanceDatabase(this);
 	}
 
 	@Override
@@ -63,6 +69,9 @@ public class MainActivity extends ActionBarActivity
 			if(contents != null)
 			{
 				consoleTextView.append(contents + "\n");
+
+				database.addScan(Integer.parseInt(contents));
+
 			}
             else
             {
@@ -99,8 +108,9 @@ public class MainActivity extends ActionBarActivity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings)
+		if (id == R.id.action_student_names)
 		{
+			startActivity(new Intent(this, StudentNameActivity.class));
 			return true;
 		}
 

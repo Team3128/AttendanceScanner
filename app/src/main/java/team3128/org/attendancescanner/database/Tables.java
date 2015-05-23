@@ -28,9 +28,9 @@ public class Tables
 		public static final String SQL_CREATE_TABLE =
 						"CREATE TABLE " + TABLE_NAME + " (" +
 										COLUMN_NAME_STUDENT_ID + " INTEGER" + COMMA_SEP +
-										"FOREIGN KEY(" + COLUMN_NAME_STUDENT_ID + " REFERENCES " + Students.TABLE_NAME + "(" + Students.COLUMN_NAME_STUDENT_ID + ")" + COMMA_SEP +
-										COLUMN_NAME_TIME + " INTEGER" +  //stored as seconds since start of UNIX epoch
-						" )";
+										COLUMN_NAME_TIME + " INTEGER " +  COMMA_SEP +//stored as seconds since start of UNIX epoch
+										"FOREIGN KEY(" + COLUMN_NAME_STUDENT_ID + ") REFERENCES " + Students.TABLE_NAME + "(" + Students.COLUMN_NAME_STUDENT_ID + ")" +
+										" )";
 	}
 
 	/* Inner class that defines the table contents */
@@ -38,7 +38,7 @@ public class Tables
 	{
 		public static final String TABLE_NAME = "students";
 		public static final String COLUMN_NAME_STUDENT_ID = "studentID";
-		public static final String COLUMN_NAME_STUDENT_NAME = "scanDay";
+		public static final String COLUMN_NAME_STUDENT_NAME = "name";
 
 		public static final String SQL_CREATE_TABLE =
 						"CREATE TABLE " + TABLE_NAME + " (" +

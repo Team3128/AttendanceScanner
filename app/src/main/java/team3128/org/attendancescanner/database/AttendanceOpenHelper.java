@@ -16,6 +16,7 @@ public class AttendanceOpenHelper extends SQLiteOpenHelper
 	public AttendanceOpenHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
+
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(Tables.ScanTimes.SQL_CREATE_TABLE);
 		db.execSQL(Tables.Students.SQL_CREATE_TABLE);

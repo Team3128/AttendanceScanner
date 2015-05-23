@@ -7,5 +7,8 @@
     <string name="initializing">Initializing...</string>
     <string name="scan">Scan</string>
     <string name="title_activity_attendance_view">AttendanceViewActivity</string>
+    <string name="title_activity_student_name">StudentNameActivity</string>
+    <string name="action_student_names">Edit Students</string>
+    <string name="action_add_student">Add Student</string>
 
 </resources>

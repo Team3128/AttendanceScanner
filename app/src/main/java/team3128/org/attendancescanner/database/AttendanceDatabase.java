@@ -1,6 +1,7 @@
 package team3128.org.attendancescanner.database;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -10,6 +11,11 @@ import android.util.Log;
 public class AttendanceDatabase
 {
 	AttendanceOpenHelper helper;
+
+	public AttendanceDatabase(Context context)
+	{
+		helper = new AttendanceOpenHelper(context);
+	}
 
 	public void addScan(int studentID)
 	{
@@ -102,5 +108,16 @@ public class AttendanceDatabase
 		db.delete(Tables.Students.TABLE_NAME,
 						Tables.Students.COLUMN_NAME_STUDENT_ID + " = ?",
 						new String[]{Integer.toString(studentID)});
+	}
+
+	/**
+	 * Get a cursor to the Students table.
+	 * @return
+	 */
+	public Cursor getAllStudents()
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+
+		return db.rawQuery("SELECT * FROM ?", new String[]{Tables.Students.TABLE_NAME});
 	}
 }
