@@ -107,12 +107,16 @@ public class MainActivity extends ActionBarActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_student_names)
-		{
-			startActivity(new Intent(this, StudentNameActivity.class));
-			return true;
-		}
+	if(id == R.id.action_student_names)
+	{
+		startActivity(new Intent(this, StudentNameActivity.class));
+		return true;
+	}
+	else if(id == R.id.action_view_attendance)
+	{
+		startActivity(new Intent(this, AttendanceActivity.class));
+		return true;
+	}
 
 		return super.onOptionsItemSelected(item);
 	}

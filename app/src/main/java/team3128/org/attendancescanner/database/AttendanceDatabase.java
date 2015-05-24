@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
@@ -130,7 +131,7 @@ public class AttendanceDatabase
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		return db.rawQuery("SELECT rowid AS _id, studentId, firstName, lastName, scanTime FROM Students", null);
+		return db.rawQuery("SELECT rowid AS _id, studentId, firstName, lastName FROM Students", null);
 	}
 
 	/**
@@ -152,9 +153,30 @@ public class AttendanceDatabase
 		Date endDate = calendar.getTime();
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		return db.rawQuery("SELECT Students.studentID, Students.firstName, Students.lastName, MIN(ScanTimes.scanTime) AS inTime, MAX(ScanTimes.scanTime) AS outTime " +
+		return db.rawQuery("SELECT Students.rowid AS _id, Students.studentID, Students.firstName, Students.lastName, MIN(ScanTimes.scanTime) AS timeIn, MAX(ScanTimes.scanTime) AS timeOut " +
 						"FROM Students INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID) " +
-						"WHERE ScanTimes.scanTimes BETWEEN (? AND ?) " +
-						"GROUP BY Students.studentID", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
+						"WHERE ScanTimes.scanTime BETWEEN " + startDate.getTime() + " AND " + endDate.getTime() + " " +
+						"GROUP BY Students.studentID", null);
+	}
+
+	/**
+	 * Get a date object for the most recent scan that was done.
+	 * @return
+	 */
+	public Calendar getMostRecentScanTime()
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+
+		Cursor cursor = db.rawQuery("SELECT MAX(scanTime) AS maxTime FROM scanTimes", null);
+
+		cursor.moveToFirst();
+		Calendar mostRecentScan = new GregorianCalendar();
+
+		if(cursor.getCount() > 0)
+		{
+			mostRecentScan.setTimeInMillis(cursor.getLong(cursor.getColumnIndexOrThrow("maxTime")));
+		}
+
+		return mostRecentScan;
 	}
 }

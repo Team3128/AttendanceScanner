@@ -4,6 +4,9 @@
       tools:context=".MainActivity">
     <item android:id="@+id/action_student_names"
           android:title="@string/action_student_names"
-          android:orderInCategory="100"
+          app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_view_attendance"
+          android:title="@string/action_view_attendance"
           app:showAsAction="ifRoom"/>
 </menu>

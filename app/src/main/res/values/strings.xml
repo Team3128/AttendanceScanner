@@ -10,5 +10,8 @@
     <string name="title_activity_student_name">StudentNameActivity</string>
     <string name="action_student_names">Edit Students</string>
     <string name="action_add_student">Add Student</string>
+    <string name="action_view_attendance">View Attendance</string>
+    <string name="title_activity_attendance">AttendanceActivity</string>
+    <string name="showing_attendance_from">Showing Attendance From:</string>
 
 </resources>
