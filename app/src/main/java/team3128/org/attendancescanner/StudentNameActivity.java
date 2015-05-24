@@ -52,7 +52,7 @@ public class StudentNameActivity extends ListActivity
 						cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_LAST_NAME)));
 	}
 
-	private void showEditStudentDialog(final int studentID, String firstName, String lastName)
+	private void showAddStudentDialog()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -61,24 +61,11 @@ public class StudentNameActivity extends ListActivity
 		View content = inflater.inflate(R.layout.dialog_edit_student, null);
 		builder.setView(content);
 
-		final EditText firstNameText = (EditText) content.findViewById(R.id.firstNameText);
+        final EditText studentIDText = (EditText) content.findViewById(R.id.studentIDText);
+        final EditText firstNameText = (EditText) content.findViewById(R.id.firstNameText);
 		final EditText lastNameText = (EditText) content.findViewById(R.id.lastNameText);
 
-		builder.setTitle("Edit Student " + studentID);
-
-		firstNameText.setText(firstName);
-		lastNameText.setText(lastName);
-
-		builder.setNeutralButton(R.string.remove, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-
-				attendanceDatabase.removeStudent(studentID);
-				updateList();
-			}
-		});
+		builder.setTitle(R.string.add_student);
 
 		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
 		{
@@ -96,18 +83,85 @@ public class StudentNameActivity extends ListActivity
 			{
 				String newFirstName = firstNameText.getText().toString();
 				String newLastName = lastNameText.getText().toString();
+                int studentID = Integer.parseInt(studentIDText.getText().toString());
 
-				if(!(newFirstName.isEmpty() && newLastName.isEmpty()))
+                //if the person didn't enter a first or last name, keep those fields null so that
+                //the student's student ID is displayed in the attendance view.
+                //It doesn't make much sense that anyone would only enter the student id
+                //in this view, but I'm trying to prepare for it if it happens.
+				if(newFirstName.isEmpty() && newLastName.isEmpty())
 				{
-					attendanceDatabase.updateStudent(studentID, firstNameText.getText().toString(), lastNameText.getText().toString());
-					updateList();
+					attendanceDatabase.addStudent(studentID, null, null);
 				}
-			}
+                else
+                {
+                    attendanceDatabase.addStudent(studentID, newFirstName, newLastName);
+                }
+
+                updateList();
+
+            }
 		});
 
 		builder.show();
 	}
 
+
+    private void showEditStudentDialog(final int studentID, String firstName, String lastName)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // layout and inflater
+        LayoutInflater inflater = getLayoutInflater();
+        View content = inflater.inflate(R.layout.dialog_edit_student, null);
+        builder.setView(content);
+
+        final EditText firstNameText = (EditText) content.findViewById(R.id.firstNameText);
+        final EditText lastNameText = (EditText) content.findViewById(R.id.lastNameText);
+
+        builder.setTitle("Edit Student " + studentID);
+
+        firstNameText.setText(firstName);
+        lastNameText.setText(lastName);
+
+        builder.setNeutralButton(R.string.remove, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+
+                attendanceDatabase.removeStudent(studentID);
+                updateList();
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //do nothing
+            }
+        });
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String newFirstName = firstNameText.getText().toString();
+                String newLastName = lastNameText.getText().toString();
+
+                if(!(newFirstName.isEmpty() && newLastName.isEmpty()))
+                {
+                    attendanceDatabase.updateStudent(studentID, newFirstName, newLastName);
+                    updateList();
+                }
+            }
+        });
+
+        builder.show();
+    }
 
 
 	@Override

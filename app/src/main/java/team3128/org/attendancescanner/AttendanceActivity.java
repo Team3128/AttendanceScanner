@@ -83,6 +83,7 @@ public class AttendanceActivity extends ActionBarActivity implements DatePickerD
 	public void selectDateCallback(View view)
 	{
 		DatePickerDialog datePickerDialog = new DatePickerDialog(this, DatePickerDialog.THEME_HOLO_LIGHT, this, day, month, year);
+        datePickerDialog.getDatePicker().setCalendarViewShown(true);
 		datePickerDialog.show();
 	}
 
