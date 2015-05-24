@@ -58,16 +58,35 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
 
 		int timeInIndex = cursor.getColumnIndexOrThrow("timeIn");
+		int timeOutIndex = cursor.getColumnIndexOrThrow("timeOut");
+
+		String timeInString = "";
+
+		String timeOutString = "";
+
 		if(!cursor.isNull(timeInIndex))
 		{
-			timeInView.setText(dateFormat.format(new Date(cursor.getLong(timeInIndex))));
+			long timeInStamp = cursor.getLong(timeInIndex);
+			timeInString = dateFormat.format(new Date(timeInStamp));
+
+			if(!cursor.isNull(timeOutIndex))
+			{
+				/*
+				 * If a person only scanned their card once on a given day, the timeIn and timeOut returned from the query
+				 * are the same.  We check for that here.
+				 */
+
+				long timeOutStamp = cursor.getLong(timeOutIndex);
+				if(timeInStamp != timeOutStamp)
+				{
+					timeOutString = dateFormat.format(new Date(timeOutStamp));
+				}
+			}
+
 		}
 
-		int timeOutIndex = cursor.getColumnIndexOrThrow("timeOut");
-		if(!cursor.isNull(timeOutIndex))
-		{
-			timeOutView.setText(dateFormat.format(new Date(cursor.getLong(timeOutIndex))));
-		}
+		timeInView.setText(timeInString);
+		timeOutView.setText(timeOutString);
 
 	}
 }

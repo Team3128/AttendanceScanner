@@ -26,7 +26,6 @@
             android:onClick="selectDateCallback"
             />
     </LinearLayout>
-
     <View
         android:layout_height="2dp"
         android:layout_width="fill_parent"

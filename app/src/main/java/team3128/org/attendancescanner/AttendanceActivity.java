@@ -1,9 +1,9 @@
 package team3128.org.attendancescanner;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -19,7 +19,7 @@ import team3128.org.attendancescanner.database.AttendanceDatabase;
 /**
  * Activity for viewing the attendance of club members.
  */
-public class AttendanceActivity extends ActionBarActivity implements DatePickerDialog.OnDateSetListener
+public class AttendanceActivity extends Activity implements DatePickerDialog.OnDateSetListener
 {
 	ListView attendanceList;
 	Button selectDateButton;
@@ -29,7 +29,7 @@ public class AttendanceActivity extends ActionBarActivity implements DatePickerD
 
 	private AttendanceDatabase attendanceDatabase;
 
-	AttendanceCursorAdaptor attendanceCursorAdaptor;
+	private AttendanceCursorAdaptor attendanceCursorAdaptor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

@@ -17,5 +17,7 @@
     <string name="remove">Remove</string>
     <string name="add_student">Add Student</string>
     <string name="student_id">Student ID</string>
+    <string name="remove_student_title">Remove this student?</string>
+    <string name="remove_student_message">This will delete all their attendance records.</string>
 
 </resources>

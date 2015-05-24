@@ -1,12 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
     <item android:id="@+id/action_student_names"
           android:title="@string/action_student_names"
-          app:showAsAction="ifRoom"/>
+          android:showAsAction="always"
+          android:icon="@android:drawable/ic_menu_my_calendar"/>
 
     <item android:id="@+id/action_view_attendance"
           android:title="@string/action_view_attendance"
-          app:showAsAction="ifRoom"/>
+          android:showAsAction="always"
+          android:icon="@android:drawable/ic_menu_today"/>
 </menu>

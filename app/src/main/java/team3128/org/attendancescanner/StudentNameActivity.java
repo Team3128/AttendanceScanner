@@ -1,10 +1,13 @@
 package team3128.org.attendancescanner;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +38,8 @@ public class StudentNameActivity extends ListActivity
 		adaptor = new StudentsCursorAdaptor(cursor, this);
 
 		setListAdapter(adaptor);
+
+		//getActionBar().show();
 	}
 
     @Override
@@ -92,27 +97,68 @@ public class StudentNameActivity extends ListActivity
 			{
 				String newFirstName = firstNameText.getText().toString();
 				String newLastName = lastNameText.getText().toString();
-                int studentID = Integer.parseInt(studentIDText.getText().toString());
+				int studentID = Integer.parseInt(studentIDText.getText().toString());
 
-                //if the person didn't enter a first or last name, keep those fields null so that
-                //the student's student ID is displayed in the attendance view.
-                //It doesn't make much sense that anyone would only enter the student id
-                //in this view, but I'm trying to prepare for it if it happens.
+				//if the person didn't enter a first or last name, keep those fields null so that
+				//the student's student ID is displayed in the attendance view.
+				//It doesn't make much sense that anyone would only enter the student id
+				//in this view, but I'm trying to prepare for it if it happens.
 				if(newFirstName.isEmpty() && newLastName.isEmpty())
 				{
 					attendanceDatabase.addStudent(studentID, null, null);
 				}
-                else
-                {
-                    attendanceDatabase.addStudent(studentID, newFirstName, newLastName);
-                }
+				else
+				{
+					attendanceDatabase.addStudent(studentID, newFirstName, newLastName);
+				}
 
-                updateList();
+				updateList();
 
-            }
+      		}
 		});
 
-		builder.show();
+	  	final AlertDialog dialog = builder.create();
+
+	  	//add a listener to enable the positive button if the student ID is valid
+		studentIDText.addTextChangedListener(new TextWatcher()
+		{
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after)
+			{
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count)
+			{
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s)
+			{
+				boolean valid = false;
+				try
+				{
+				  Integer.parseInt(s.toString());
+				  //if(s.length() > 0)
+				  //{
+					valid = true;
+				  //}
+				}
+				catch(NumberFormatException e)
+				{
+				  //not valid
+				}
+
+				dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(valid);
+
+			}
+		});
+
+	  	dialog.show();
+	  	dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+
 	}
 
 
@@ -138,9 +184,20 @@ public class StudentNameActivity extends ListActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-
-                attendanceDatabase.removeStudent(studentID);
-                updateList();
+								AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(StudentNameActivity.this);
+	              confirmationBuilder.setTitle(R.string.remove_student_title);
+	              confirmationBuilder.setMessage(R.string.remove_student_message);
+	              confirmationBuilder.setNegativeButton(android.R.string.cancel, null);
+	              confirmationBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+	              {
+		              @Override
+		              public void onClick(DialogInterface dialog, int which)
+		              {
+			              attendanceDatabase.removeStudent(studentID);
+			              updateList();
+		              }
+	              });
+	            confirmationBuilder.show();
             }
         });
 

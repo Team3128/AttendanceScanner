@@ -60,6 +60,28 @@ public class AttendanceDatabase
 	}
 
 	/**
+	 * Get a string containing the full name of the student with the provided ID, or null if the student has no name set.
+	 * @param studentID
+	 * @return
+	 */
+	public String getStudentName(int studentID)
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+
+
+		Cursor cursor = db.rawQuery("SELECT PRINTF(\"%s %s\", firstName, lastName) as name FROM students WHERE studentID = " + studentID, null);
+
+		cursor.moveToFirst();
+
+		if(cursor.getCount() <= 0)
+		{
+			return null;
+		}
+
+		return cursor.getString(cursor.getColumnIndexOrThrow("name"));
+	}
+
+	/**
 	 * Add a student to the database.  Assumes that the student doesn't already exist.
 	 * @param studentID
 	 * @param firstName
@@ -73,7 +95,8 @@ public class AttendanceDatabase
 		// Create a new map of values, where column names are the keys
 		ContentValues values = new ContentValues();
 		values.put(Tables.Students.STUDENT_ID, studentID);
-
+		values.put(Tables.Students.STUDENT_FIRST_NAME, firstName);
+		values.put(Tables.Students.STUDENT_LAST_NAME, lastName);
 		db.insert(Tables.Students.TABLE_NAME, null, values);
 	}
 

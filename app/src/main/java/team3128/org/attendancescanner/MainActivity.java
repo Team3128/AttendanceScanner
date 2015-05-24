@@ -1,8 +1,8 @@
 package team3128.org.attendancescanner;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +15,7 @@ import com.google.zxing.integration.android.IntentResult;
 import team3128.org.attendancescanner.database.AttendanceDatabase;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends Activity
 {
 	public TextView consoleTextView;
 
@@ -68,19 +68,26 @@ public class MainActivity extends ActionBarActivity
 			String contents = result.getContents();
 			if(contents != null)
 			{
-				consoleTextView.append(contents + "\n");
-
-				database.addScan(Integer.parseInt(contents));
-
+				try
+				{
+					int id = Integer.parseInt(contents);
+					String name = database.getStudentName(id);
+					consoleTextView.append("Scanned " + (name != null ? name : id) + "\n");
+					database.addScan(id);
+				}
+				catch(NumberFormatException ex)
+				{
+					consoleTextView.append("Invalid student ID!\n");
+				}
 			}
             else
             {
-                consoleTextView.append("Scan Error");
+                consoleTextView.append("Scan Error\n");
             }
 		}
 		else
 		{
-			consoleTextView.append("Scan Cancelled");
+			consoleTextView.append("Scan Cancelled\n");
 		}
 	}
 
@@ -107,17 +114,17 @@ public class MainActivity extends ActionBarActivity
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-	if(id == R.id.action_student_names)
-	{
-		startActivity(new Intent(this, StudentNameActivity.class));
-		return true;
-	}
-	else if(id == R.id.action_view_attendance)
-	{
-		startActivity(new Intent(this, AttendanceActivity.class));
-		return true;
-	}
+		if(id == R.id.action_student_names)
+		{
+			startActivity(new Intent(this, StudentNameActivity.class));
+			return true;
+		}
+		else if(id == R.id.action_view_attendance)
+		{
+			startActivity(new Intent(this, AttendanceActivity.class));
+			return true;
+		}
 
-		return super.onOptionsItemSelected(item);
-	}
+			return super.onOptionsItemSelected(item);
+		}
 }
