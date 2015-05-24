@@ -73,8 +73,6 @@ public class AttendanceDatabase
 		// Create a new map of values, where column names are the keys
 		ContentValues values = new ContentValues();
 		values.put(Tables.Students.STUDENT_ID, studentID);
-		values.put(Tables.Students.STUDENT_FIRST_NAME, firstName);
-		values.put(Tables.Students.STUDENT_FIRST_NAME, lastName);
 
 		db.insert(Tables.Students.TABLE_NAME, null, values);
 	}
@@ -156,7 +154,7 @@ public class AttendanceDatabase
 		return db.rawQuery("SELECT Students.rowid AS _id, Students.studentID, Students.firstName, Students.lastName, MIN(ScanTimes.scanTime) AS timeIn, MAX(ScanTimes.scanTime) AS timeOut " +
 						"FROM Students INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID) " +
 						"WHERE ScanTimes.scanTime BETWEEN " + startDate.getTime() + " AND " + endDate.getTime() + " " +
-						"GROUP BY Students.studentID", null);
+						"GROUP BY Students.studentID ORDER BY timeIn", null);
 	}
 
 	/**

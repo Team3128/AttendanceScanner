@@ -13,5 +13,8 @@
     <string name="action_view_attendance">View Attendance</string>
     <string name="title_activity_attendance">AttendanceActivity</string>
     <string name="showing_attendance_from">Showing Attendance From:</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="remove">Remove</string>
 
 </resources>
