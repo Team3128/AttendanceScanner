@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -36,6 +37,14 @@ public class StudentNameActivity extends ListActivity
 		setListAdapter(adaptor);
 	}
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_student_name, menu);
+        return true;
+    }
+
 	private void updateList()
 	{
 		Cursor cursor = attendanceDatabase.getAllStudents();
@@ -58,7 +67,7 @@ public class StudentNameActivity extends ListActivity
 
 		// layout and inflater
 		LayoutInflater inflater = getLayoutInflater();
-		View content = inflater.inflate(R.layout.dialog_edit_student, null);
+		View content = inflater.inflate(R.layout.dialog_add_student, null);
 		builder.setView(content);
 
         final EditText studentIDText = (EditText) content.findViewById(R.id.studentIDText);
@@ -173,8 +182,9 @@ public class StudentNameActivity extends ListActivity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings)
+		if (id == R.id.action_add_student)
 		{
+            showAddStudentDialog();
 			return true;
 		}
 

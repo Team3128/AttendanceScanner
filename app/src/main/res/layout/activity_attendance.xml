@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:text="xx/xx/xxxx"
             android:id="@+id/selectDateButton"
+            android:onClick="selectDateCallback"
             />
     </LinearLayout>
 

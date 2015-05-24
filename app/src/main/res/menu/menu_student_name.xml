@@ -2,7 +2,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="team3128.org.attendancescanner.StudentNameActivity">
-    <item android:id="@+id/action_view_attendance"
+    <item android:id="@+id/action_add_student"
         android:title="@string/add_student"
         app:showAsAction="always"/>
 </menu>
