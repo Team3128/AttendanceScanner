@@ -1,8 +1,10 @@
-package team3128.org.attendancescanner;
+package org.team3128.attendancescanner;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,11 +14,16 @@ import android.widget.TextView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import team3128.org.attendancescanner.database.AttendanceDatabase;
+import org.team3128.attendancescanner.database.AttendanceDatabase;
+
+import java.io.File;
 
 
 public class MainActivity extends Activity
 {
+
+	private final static int FILE_PICKER_REQUEST_CODE = 1;
+
 	public TextView consoleTextView;
 
 	public Button scanButton;
@@ -62,6 +69,22 @@ public class MainActivity extends Activity
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
+		if(requestCode == FILE_PICKER_REQUEST_CODE)
+		{
+			//get the file that was returned
+			//check if the user pressed cancel
+			if(intent != null)
+			{
+				Uri fileUri = intent.getData();
+				File file = new File(fileUri.getPath());
+				Log.v("MainActivity", "Loading new database " + file.getPath());
+				Log.v("MainActivity", "File exists: " + file.exists());
+			}
+
+			return;
+
+		}
+
 		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if (result != null)
 		{
@@ -124,7 +147,12 @@ public class MainActivity extends Activity
 			startActivity(new Intent(this, AttendanceActivity.class));
 			return true;
 		}
-
-			return super.onOptionsItemSelected(item);
+		else if(id == R.id.action_import_database)
+		{
+			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+			intent.setType("file/*");
+			startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
 		}
+		return super.onOptionsItemSelected(item);
+	}
 }

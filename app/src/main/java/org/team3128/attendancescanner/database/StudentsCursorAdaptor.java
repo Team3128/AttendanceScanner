@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner.database;
+package org.team3128.attendancescanner.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import team3128.org.attendancescanner.R;
+import org.team3128.attendancescanner.R;
 
 /**
  * Created by Jamie on 5/22/2015.

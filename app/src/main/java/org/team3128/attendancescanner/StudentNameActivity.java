@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner;
+package org.team3128.attendancescanner;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,9 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import team3128.org.attendancescanner.database.AttendanceDatabase;
-import team3128.org.attendancescanner.database.StudentsCursorAdaptor;
-import team3128.org.attendancescanner.database.Tables;
+import org.team3128.attendancescanner.database.AttendanceDatabase;
+import org.team3128.attendancescanner.database.StudentsCursorAdaptor;
+import org.team3128.attendancescanner.database.Tables;
 
 
 public class StudentNameActivity extends ListActivity

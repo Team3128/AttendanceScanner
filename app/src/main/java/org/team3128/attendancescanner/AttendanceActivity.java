@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner;
+package org.team3128.attendancescanner;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -13,8 +13,8 @@ import android.widget.ListView;
 
 import java.util.Calendar;
 
-import team3128.org.attendancescanner.database.AttendanceCursorAdaptor;
-import team3128.org.attendancescanner.database.AttendanceDatabase;
+import org.team3128.attendancescanner.database.AttendanceCursorAdaptor;
+import org.team3128.attendancescanner.database.AttendanceDatabase;
 
 /**
  * Activity for viewing the attendance of club members.

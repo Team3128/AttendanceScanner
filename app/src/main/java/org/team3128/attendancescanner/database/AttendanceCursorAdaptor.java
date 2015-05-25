@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner.database;
+package org.team3128.attendancescanner.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import team3128.org.attendancescanner.R;
+import org.team3128.attendancescanner.R;
 
 /**
  * Cursor adaptor to put attendance data into a ListView.

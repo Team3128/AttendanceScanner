@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner.database;
+package org.team3128.attendancescanner.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

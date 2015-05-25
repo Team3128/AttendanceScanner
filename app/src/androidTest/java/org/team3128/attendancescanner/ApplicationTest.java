@@ -1,4 +1,4 @@
-package team3128.org.attendancescanner;
+package org.team3128.attendancescanner;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

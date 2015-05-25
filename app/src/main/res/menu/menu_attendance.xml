@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="team3128.org.attendancescanner.AttendanceActivity">
+      tools:context="org.team3128.attendancescanner.AttendanceActivity">
 </menu>
