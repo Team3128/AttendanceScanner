@@ -78,14 +78,25 @@ public class MainActivity extends Activity
 	{
 		if(requestCode == FILE_PICKER_REQUEST_CODE)
 		{
-			//get the file that was returned
 			//check if the user pressed cancel
 			if(intent != null)
 			{
+				//get the file that was returned
 				Uri fileUri = intent.getData();
 				File file = new File(fileUri.getPath());
 				Log.v("MainActivity", "Loading new database " + file.getPath());
 				Log.v("MainActivity", "File exists: " + file.exists());
+				File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
+				try
+				{
+					copyFiles(file, database);
+					Toast.makeText(this, "Database imported.", Toast.LENGTH_SHORT).show();
+				}
+				catch (IOException e)
+				{
+					Toast.makeText(this, "Error importing database.  Maybe look at the logcat?", Toast.LENGTH_SHORT).show();
+					e.printStackTrace();
+				}
 			}
 
 			return;
@@ -136,6 +147,21 @@ public class MainActivity extends Activity
 		return true;
 	}
 
+	/**
+	 * Android is missing the Java file copy function.
+	 * I found this one on StackOverflow.
+	 * @param source
+	 * @param destination
+	 */
+	private void copyFiles(File source, File destination) throws IOException
+	{
+		FileChannel src = new FileInputStream(source).getChannel();
+		FileChannel dst = new FileOutputStream(destination).getChannel();
+		dst.transferFrom(src, 0, src.size());
+		src.close();
+		dst.close();
+	}
+
 	private void backupDatabase()
 	{
 		File backupLocation = new File(Environment.getExternalStorageDirectory(), AttendanceOpenHelper.DATABASE_NAME);
@@ -146,11 +172,7 @@ public class MainActivity extends Activity
 		{
 			try
 			{
-				FileChannel src = new FileInputStream(database).getChannel();
-				FileChannel dst = new FileOutputStream(backupLocation).getChannel();
-				dst.transferFrom(src, 0, src.size());
-				src.close();
-				dst.close();
+				copyFiles(database, backupLocation);
 				Toast.makeText(this, "Backed up attendance database to " + backupLocation.getPath(), Toast.LENGTH_LONG).show();
 			}
 			catch (IOException e)
