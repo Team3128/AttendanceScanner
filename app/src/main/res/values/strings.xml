@@ -20,6 +20,6 @@
     <string name="remove_student_title">Remove this student?</string>
     <string name="remove_student_message">This will delete all their attendance records.</string>
     <string name="import_database">Import Database...</string>
-    <string name="export_database">Import Database</string>
+    <string name="export_database">Export Database</string>
 
 </resources>

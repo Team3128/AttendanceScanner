@@ -4,19 +4,26 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
+import org.team3128.attendancescanner.database.AttendanceOpenHelper;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 
 public class MainActivity extends Activity
@@ -129,6 +136,36 @@ public class MainActivity extends Activity
 		return true;
 	}
 
+	private void backupDatabase()
+	{
+		File backupLocation = new File(Environment.getExternalStorageDirectory(), AttendanceOpenHelper.DATABASE_NAME);
+		File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
+
+		Log.d("MainActivity", "Attempting to copy " + database.getPath() + " to " + backupLocation.getPath());
+		if(database.exists() && backupLocation.canWrite())
+		{
+			try
+			{
+				FileChannel src = new FileInputStream(database).getChannel();
+				FileChannel dst = new FileOutputStream(backupLocation).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+				Toast.makeText(this, "Backed up attendance database to " + backupLocation.getPath(), Toast.LENGTH_LONG).show();
+			}
+			catch (IOException e)
+			{
+				Log.e("MainActivity", "Error backing up database");
+				e.printStackTrace();
+			}
+
+		}
+		else
+		{
+			Log.e("MainActivity", "Could not back up database: database not found or can't write to output file.");
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -147,10 +184,17 @@ public class MainActivity extends Activity
 			startActivity(new Intent(this, AttendanceActivity.class));
 			return true;
 		}
+		else if(id == R.id.action_export_database)
+		{
+			backupDatabase();
+		}
 		else if(id == R.id.action_import_database)
 		{
+			backupDatabase();
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("file/*");
+			intent.putExtra("com.estrongs.intent.extra.TITLE", "Import Database");
+
 			startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
 		}
 		return super.onOptionsItemSelected(item);
