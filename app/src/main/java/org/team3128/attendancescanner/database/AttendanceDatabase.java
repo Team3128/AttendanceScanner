@@ -200,4 +200,32 @@ public class AttendanceDatabase
 
 		return mostRecentScan;
 	}
+	
+	/**
+		Get the scan times for the provided student sorted by day.
+		Takes a range of dates to get records in (inclusive).
+	
+		@param studentID the ID number of the student
+	*/
+	public Cursor getStudentScansByDay(int studentID, Date startDate, Date endDate)
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		//NOTE: see total-attendance-times.sql for the formatted version of this query.
+		return db.rawQuery("SELECT time(scanTimes.scanTime / 1000, 'unixepoch') as timeScanned," + 
+			"days.dayScanned FROM scanTimes,(SELECT DISTINCT date(ST3.scanTime/1000, 'unixepoch')  AS dayScanned " +
+			"FROM scanTimes AS ST3 WHERE ST3.studentID = ? AND ST3.scanTime > ? AND " +
+			"ST3.scanTime < ?) as days WHERE scanTimes.scanTime > (strftime('%s', days.dayScanned, 'start of day') * 1000)" +
+			"AND scanTimes.scanTime <= (strftime('%s', days.dayScanned, '+1 day', 'start of day') * 1000) AND scanTimes.studentID = 783974",
+			new String[]{studentID, startDate.getTime(), endDate.getTime(), studentID});
+	}
+	
+	/**
+		Get all scan times for the provided student sorted by day.
+		@param studentID the ID number of the student
+	*/
+	public Cursor getStudentScansByDay(int studentID)
+	{
+		//hopefully no one will go back in time and have a scan before 1970
+		return getStudentScansByDay(studentID, new Date(0), new Date());
+	}
 }

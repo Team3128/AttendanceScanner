@@ -21,5 +21,8 @@
     <string name="remove_student_message">This will delete all their attendance records.</string>
     <string name="import_database">Import Database...</string>
     <string name="export_database">Export Database</string>
+    <string name="password_dialog_title">Enter Mentor Password</string>
+    <string name="password_dialog_message">This function is reserved for club administrators.</string>
+    <string name="password_incorrect">Incorrect password!</string>
 
 </resources>

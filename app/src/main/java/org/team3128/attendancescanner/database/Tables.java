@@ -12,24 +12,20 @@ public class Tables
 	private Tables() {}
 
 	private static final String TEXT_TYPE = " TEXT";
-	private static final String COMMA_SEP = ",";
 
 	/* Inner class that defines the table contents */
 	public static abstract class ScanTimes implements BaseColumns
 	{
-		public static final String TABLE_NAME = "scanTimes";
+		public static final String TABLE_NAME = "ScanTimes";
 
 		//use SQLite's built-in rowid
 		public static final String _ID = "rowid";
 
-		public static final String STUDENT_ID = "studentID";
-		public static final String TIME = "scanTime";
-
 		public static final String SQL_CREATE_TABLE =
-						"CREATE TABLE " + TABLE_NAME + " (" +
-										STUDENT_ID + " INTEGER" + COMMA_SEP +
-										TIME + " INTEGER " +  COMMA_SEP +//stored as seconds since start of UNIX epoch
-										"FOREIGN KEY(" + STUDENT_ID + ") REFERENCES " + Students.TABLE_NAME + "(" + Students.STUDENT_ID + ")" +
+						"CREATE TABLE " + TABLE_NAME + " (studentID INTEGER, " +
+										"inTime INTEGER, " +//stored as seconds since start of UNIX epoch
+										"outTime INTEGER, " +//stored as seconds since start of UNIX epoch
+										"FOREIGN KEY(studentID) REFERENCES " + Students.TABLE_NAME + "(studentID)" +
 										" )";
 	}
 
@@ -37,16 +33,11 @@ public class Tables
 	public static abstract class Students implements BaseColumns
 	{
 		public static final String TABLE_NAME = "students";
-		public static final String STUDENT_ID = "studentID";
-		public static final String STUDENT_FIRST_NAME = "firstName";
-		public static final String STUDENT_LAST_NAME = "lastName";
-
 
 		public static final String SQL_CREATE_TABLE =
-						"CREATE TABLE " + TABLE_NAME + " (" +
-										STUDENT_ID + " INTEGER PRIMARY KEY" + COMMA_SEP +
-										STUDENT_FIRST_NAME + TEXT_TYPE + COMMA_SEP +
-										STUDENT_LAST_NAME + TEXT_TYPE +
-										" )";
+						"CREATE TABLE " + TABLE_NAME + " (studentID INTEGER PRIMARY KEY, " +
+										"firstName TEXT, " +
+										"lastName TEXT" +
+										")";
 	}
 }

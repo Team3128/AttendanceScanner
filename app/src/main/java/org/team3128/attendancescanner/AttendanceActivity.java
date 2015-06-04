@@ -11,10 +11,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 
-import java.util.Calendar;
-
 import org.team3128.attendancescanner.database.AttendanceCursorAdaptor;
 import org.team3128.attendancescanner.database.AttendanceDatabase;
+
+import java.util.Calendar;
 
 /**
  * Activity for viewing the attendance of club members.
@@ -60,6 +60,16 @@ public class AttendanceActivity extends Activity implements DatePickerDialog.OnD
 		}
 
 		setDateFilter();
+
+		//close the activity if the user enters
+		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				finish();
+			}
+		});
 	}
 
 	@Override
