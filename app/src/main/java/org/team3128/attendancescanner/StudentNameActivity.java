@@ -17,7 +17,6 @@ import android.widget.ListView;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 import org.team3128.attendancescanner.database.StudentsCursorAdaptor;
-import org.team3128.attendancescanner.database.Tables;
 
 
 public class StudentNameActivity extends ListActivity
@@ -60,10 +59,10 @@ public class StudentNameActivity extends ListActivity
 	{
 		//get the cursor for the clicked position and use that to get the student ID
 		Cursor cursor = ((Cursor)getListAdapter().getItem(position));
-		int studentID = cursor.getInt(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_ID));
+		int studentID = cursor.getInt(cursor.getColumnIndexOrThrow("studentID"));
 		showEditStudentDialog(studentID,
-						cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_FIRST_NAME)),
-						cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_LAST_NAME)));
+						cursor.getString(cursor.getColumnIndexOrThrow("firstName")),
+						cursor.getString(cursor.getColumnIndexOrThrow("lastName")));
 	}
 
 	private void showAddStudentDialog()

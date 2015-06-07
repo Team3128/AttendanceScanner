@@ -23,16 +23,16 @@ public class Tables
 
 		public static final String SQL_CREATE_TABLE =
 						"CREATE TABLE " + TABLE_NAME + " (studentID INTEGER, " +
-										"inTime INTEGER, " +//stored as seconds since start of UNIX epoch
-										"outTime INTEGER, " +//stored as seconds since start of UNIX epoch
-										"FOREIGN KEY(studentID) REFERENCES " + Students.TABLE_NAME + "(studentID)" +
-										" )";
+			"inTime INTEGER, " +//stored as seconds since start of UNIX epoch
+			"outTime INTEGER, " +//stored as seconds since start of UNIX epoch
+			"FOREIGN KEY(studentID) REFERENCES " + Students.TABLE_NAME + "(studentID)" +
+			" )";
 	}
 
 	/* Inner class that defines the table contents */
 	public static abstract class Students implements BaseColumns
 	{
-		public static final String TABLE_NAME = "students";
+		public static final String TABLE_NAME = "Students";
 
 		public static final String SQL_CREATE_TABLE =
 						"CREATE TABLE " + TABLE_NAME + " (studentID INTEGER PRIMARY KEY, " +

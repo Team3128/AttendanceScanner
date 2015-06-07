@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class MainActivity extends Activity
@@ -113,8 +115,23 @@ public class MainActivity extends Activity
 				{
 					int id = Integer.parseInt(contents);
 					String name = database.getStudentName(id);
-					consoleTextView.append("Scanned " + (name != null ? name : id) + "\n");
-					database.addScan(id);
+
+					//if the last scan in was before this time, we will assume that they forgot to scan out and start a new scan
+					Calendar recentScanCutoff = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+					recentScanCutoff.add(Calendar.HOUR, -12);
+
+					Long scanInRowID = database.getMostRecentScanIn(id, recentScanCutoff.getTime());
+
+					consoleTextView.append("Scanned " + (name != null ? name : id) + (scanInRowID != null ? " out.\n" : " in.\n"));
+
+					if(scanInRowID != null)
+					{
+						database.addScanOut(scanInRowID);
+					}
+					else
+					{
+						database.addScanIn(id);
+					}
 				}
 				catch(NumberFormatException ex)
 				{

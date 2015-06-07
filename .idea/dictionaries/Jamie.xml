@@ -2,6 +2,7 @@
   <dictionary name="Jamie">
     <words>
       <w>printf</w>
+      <w>rowid</w>
     </words>
   </dictionary>
 </component>

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="@string/name"
         android:textSize="8pt"
         android:layout_weight=".8"
         android:layout_margin="15dp"
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Time In"
+        android:text="@string/time_in"
         android:textSize="10pt"
         android:layout_weight=".5"
         android:padding="1dp"
@@ -37,11 +37,25 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Time Out"
+        android:text="@string/time_out"
         android:textSize="10pt"
         android:layout_weight=".5"
         android:padding="1dp"
         android:id="@+id/timeOutTextView"
+        android:gravity="center"/>
+    <View
+        android:layout_width="2dp"
+        android:layout_height="fill_parent"
+        android:background="#c0c0c0"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/total_time"
+        android:textSize="10pt"
+        android:layout_weight=".5"
+        android:padding="1dp"
+        android:id="@+id/totalTimeTextView"
         android:gravity="center"/>
 
 </LinearLayout>

@@ -26,6 +26,66 @@
             android:onClick="selectDateCallback"
             />
     </LinearLayout>
+    <LinearLayout
+          android:orientation="horizontal"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textSize="8pt"
+            android:layout_weight=".8"
+            android:layout_margin="15dp"
+            android:id="@+id/nameTextView"
+            />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="#c0c0c0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/time_in"
+            android:textSize="8pt"
+            android:layout_weight=".5"
+            android:padding="1dp"
+            android:id="@+id/timeInTextView"
+            android:gravity="center"/>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="#c0c0c0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/time_out"
+            android:textSize="8pt"
+            android:layout_weight=".5"
+            android:padding="1dp"
+            android:id="@+id/timeOutTextView"
+            android:gravity="center"/>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="#c0c0c0"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/total_time"
+            android:textSize="8pt"
+            android:layout_weight=".5"
+            android:padding="1dp"
+            android:id="@+id/totalTimeTextView"
+            android:gravity="center"/>
+
+    </LinearLayout>
     <View
         android:layout_height="2dp"
         android:layout_width="fill_parent"

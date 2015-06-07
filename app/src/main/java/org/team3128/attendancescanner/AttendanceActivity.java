@@ -92,7 +92,7 @@ public class AttendanceActivity extends Activity implements DatePickerDialog.OnD
 
 	public void selectDateCallback(View view)
 	{
-		DatePickerDialog datePickerDialog = new DatePickerDialog(this, DatePickerDialog.THEME_HOLO_LIGHT, this, day, month, year);
+		DatePickerDialog datePickerDialog = new DatePickerDialog(this, DatePickerDialog.THEME_HOLO_LIGHT, this, day, month - 1, year);
         datePickerDialog.getDatePicker().setCalendarViewShown(true);
 		datePickerDialog.show();
 	}
@@ -104,7 +104,7 @@ public class AttendanceActivity extends Activity implements DatePickerDialog.OnD
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
 	{
 		this.year = year;
-		this.month = monthOfYear;
+		this.month = monthOfYear + 1;
 		this.day = dayOfMonth;
 
 		setDateFilter();

@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import org.team3128.attendancescanner.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.team3128.attendancescanner.R;
+import java.util.Locale;
 
 /**
  * Cursor adaptor to put attendance data into a ListView.
@@ -38,15 +39,16 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 		TextView nameView = (TextView) view.findViewById(R.id.nameTextView);
 		TextView timeInView = (TextView) view.findViewById(R.id.timeInTextView);
 		TextView timeOutView = (TextView) view.findViewById(R.id.timeOutTextView);
+		TextView totalTimeTextView = (TextView) view.findViewById(R.id.totalTimeTextView);
 
-		String firstName = cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_FIRST_NAME));
-		String lastName = cursor.getString(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_LAST_NAME));
+		String firstName = cursor.getString(cursor.getColumnIndexOrThrow("firstName"));
+		String lastName = cursor.getString(cursor.getColumnIndexOrThrow("lastName"));
 
 		String fullName;
 		if(firstName == null && lastName == null)
 		{
 			//if the person scanned does not have a name set, use their student ID instead
-			fullName = Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow(Tables.Students.STUDENT_ID)));
+			fullName = Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow("studentID")));
 		}
 		else
 		{
@@ -55,38 +57,28 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 
 		nameView.setText(fullName);
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+		//set in and out times
 
-		int timeInIndex = cursor.getColumnIndexOrThrow("timeIn");
-		int timeOutIndex = cursor.getColumnIndexOrThrow("timeOut");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm", Locale.US);
 
-		String timeInString = "";
+		int timeInIndex = cursor.getColumnIndexOrThrow("inTime");
+		int timeOutIndex = cursor.getColumnIndexOrThrow("outTime");
+
+		long timeInStamp = cursor.getLong(timeInIndex);
+		String timeInString = dateFormat.format(new Date(timeInStamp));
 
 		String timeOutString = "";
 
-		if(!cursor.isNull(timeInIndex))
+		if(!cursor.isNull(timeOutIndex))
 		{
-			long timeInStamp = cursor.getLong(timeInIndex);
-			timeInString = dateFormat.format(new Date(timeInStamp));
-
-			if(!cursor.isNull(timeOutIndex))
-			{
-				/*
-				 * If a person only scanned their card once on a given day, the timeIn and timeOut returned from the query
-				 * are the same.  We check for that here.
-				 */
-
-				long timeOutStamp = cursor.getLong(timeOutIndex);
-				if(timeInStamp != timeOutStamp)
-				{
-					timeOutString = dateFormat.format(new Date(timeOutStamp));
-				}
-			}
-
+			long timeOutStamp = cursor.getLong(timeOutIndex);
+			timeOutString = dateFormat.format(new Date(timeOutStamp));
 		}
 
 		timeInView.setText(timeInString);
 		timeOutView.setText(timeOutString);
 
+		//set total time
+		totalTimeTextView.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow("totalTime")))));
 	}
 }

@@ -24,5 +24,9 @@
     <string name="password_dialog_title">Enter Mentor Password</string>
     <string name="password_dialog_message">This function is reserved for club administrators.</string>
     <string name="password_incorrect">Incorrect password!</string>
+    <string name="name">Name</string>
+    <string name="time_in">Time In</string>
+    <string name="time_out">Time Out</string>
+    <string name="total_time">Total Time</string>
 
 </resources>
