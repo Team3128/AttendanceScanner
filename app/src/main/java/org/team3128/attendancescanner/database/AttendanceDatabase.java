@@ -173,22 +173,22 @@ public class AttendanceDatabase
 
 		SQLiteDatabase db = helper.getReadableDatabase();
 		return db.rawQuery("SELECT Students.rowid AS _id, Students.studentID, Students.firstName, Students.lastName, "+
-						"ScanTimes.inTime, ScanTimes.outTime Totals.totalTime" +
+						"ScanTimes.inTime, ScanTimes.outTime, Totals.totalTime " +
 						"FROM Students INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID) INNER JOIN ( SELECT \n" +
-						"    studentID," +
-						"    time(SUM(Sessions.length) / 1000, 'unixepoch') AS totalTime" +
-						"FROM" +
-						"    Students," +
-						"        (SELECT " +
-						"            scanTimes.timeOut - scanTimes.timeIn  AS length" +
-						"        FROM " +
-						"scanTimes" +
-						"INNER JOIN ON(scanTimes.studentID = Students.scanTime)n" +
-						"        WHERE" +
-						"            scanTimes.scanTime <= " + endDate.getTime() +
-						"    ) as Sessions)Totals ON totals.studentID=Students.studentID " +
+							"    studentID," +
+							"    time(SUM(Sessions.length) / 1000, 'unixepoch') AS totalTime " +
+							"FROM " +
+							"    Students, " +
+							"        (SELECT " +
+							"            ScanTimes.inTime - ScanTimes.outTime  AS length " +
+							"FROM " +
+							"scanTimes " +
+							"INNER JOIN Students ON(scanTimes.studentID = Students.studentID) " +
+							"WHERE" +
+							"            scanTimes.outTime <= " + endDate.getTime() +
+						"    ) as Sessions) Totals ON Totals.studentID=Students.studentID " +
 						" WHERE ScanTimes.outTime BETWEEN " + startDate.getTime() + " AND " + endDate.getTime() + " " +
-						"ORDER BY timeIn", null);
+						"ORDER BY ScanTimes.inTime", null);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class AttendanceDatabase
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		Cursor cursor = db.rawQuery("SELECT MAX(scanTime) AS maxTime FROM scanTimes", null);
+		Cursor cursor = db.rawQuery("SELECT MAX(inTime) AS maxTime FROM scanTimes", null);
 
 		cursor.moveToFirst();
 		Calendar mostRecentScan = new GregorianCalendar();
