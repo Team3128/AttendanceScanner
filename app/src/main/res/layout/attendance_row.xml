@@ -43,19 +43,5 @@
         android:padding="1dp"
         android:id="@+id/timeOutTextView"
         android:gravity="center"/>
-    <View
-        android:layout_width="2dp"
-        android:layout_height="fill_parent"
-        android:background="#c0c0c0"/>
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/total_time"
-        android:textSize="10pt"
-        android:layout_weight=".5"
-        android:padding="1dp"
-        android:id="@+id/totalTimeTextView"
-        android:gravity="center"/>
 
 </LinearLayout>

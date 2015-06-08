@@ -39,7 +39,6 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 		TextView nameView = (TextView) view.findViewById(R.id.nameTextView);
 		TextView timeInView = (TextView) view.findViewById(R.id.timeInTextView);
 		TextView timeOutView = (TextView) view.findViewById(R.id.timeOutTextView);
-		TextView totalTimeTextView = (TextView) view.findViewById(R.id.totalTimeTextView);
 
 		String firstName = cursor.getString(cursor.getColumnIndexOrThrow("firstName"));
 		String lastName = cursor.getString(cursor.getColumnIndexOrThrow("lastName"));
@@ -77,8 +76,5 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 
 		timeInView.setText(timeInString);
 		timeOutView.setText(timeOutString);
-
-		//set total time
-		totalTimeTextView.setText(dateFormat.format(new Date(cursor.getLong(cursor.getColumnIndexOrThrow("totalTime")))));
 	}
 }

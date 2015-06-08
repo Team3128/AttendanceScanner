@@ -154,12 +154,9 @@ public class AttendanceDatabase
 	}
 
 	/**
-	 * Get a cursor containing in and out, and total attendance times for students, as well their ID numbers.
+	 * Get a cursor containing in and out times for students, as well their ID numbers.
 	 *
 	 * Takes the year, month, and day in local time as provided by the Android date selector.
-	 * @param year
-	 * @param month
-	 * @param day
 	 * @return
 	 */
 	public Cursor getStudentScanTimes(int year, int month, int day)
@@ -172,23 +169,52 @@ public class AttendanceDatabase
 		Date endDate = calendar.getTime();
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		return db.rawQuery("SELECT Students.rowid AS _id, Students.studentID, Students.firstName, Students.lastName, "+
-						"ScanTimes.inTime, ScanTimes.outTime, Totals.totalTime " +
-						"FROM Students INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID) INNER JOIN ( SELECT \n" +
-							"    studentID," +
-							"    time(SUM(Sessions.length) / 1000, 'unixepoch') AS totalTime " +
-							"FROM " +
-							"    Students, " +
-							"        (SELECT " +
-							"            ScanTimes.inTime - ScanTimes.outTime  AS length " +
-							"FROM " +
-							"scanTimes " +
-							"INNER JOIN Students ON(scanTimes.studentID = Students.studentID) " +
-							"WHERE" +
-							"            scanTimes.outTime <= " + endDate.getTime() +
-						"    ) as Sessions) Totals ON Totals.studentID=Students.studentID " +
-						" WHERE ScanTimes.outTime BETWEEN " + startDate.getTime() + " AND " + endDate.getTime() + " " +
-						"ORDER BY ScanTimes.inTime", null);
+		return db.rawQuery("SELECT \n" +
+				"    ScanTimes.rowid AS _id, \n" +
+				"    Students.studentID, \n" +
+				"    Students.firstName, \n" +
+				"    Students.lastName,\n" +
+				"    ScanTimes.inTime,\n" +
+				"    ScanTimes.outTime\n" +
+				"FROM \n" +
+				"    Students\n" +
+				"    INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID)\n" +
+				"WHERE\n" +
+				"    ScanTimes.inTime BETWEEN ? AND ?\n" +
+				"ORDER BY\n" +
+				"    ScanTimes.inTime\n", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
+	}
+
+	/**
+	 * Get a cursor containing total attendance times for students, as well their ID numbers.
+	 *
+	 * Takes the start and end year, month, and day in local time as provided by the Android date selector.
+	 * @return
+	 */
+	public Cursor getStudentTotalAttendanceTimes(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay)
+	{
+		Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+		calendar.set(startYear, startMonth, startDay, 23, 59);
+		Date startDate = calendar.getTime();
+		calendar.set(endYear, endMonth, endDay, 23, 59);
+		Date endDate = calendar.getTime();
+
+		SQLiteDatabase db = helper.getReadableDatabase();
+		return db.rawQuery("SELECT \n" +
+				"    Students.rowid AS _id, \n" +
+				"    Students.studentID, \n" +
+				"    Students.firstName, \n" +
+				"    Students.lastName,\n" +
+				"    SUM(ScanTimes.outTime - ScanTimes.inTime) AS totalTime\n" +
+				"FROM \n" +
+				"    Students\n" +
+				"    INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID)\n" +
+				"WHERE\n" +
+				"    ScanTimes.inTime BETWEEN ? AND ?\n" +
+				"    AND\n" +
+				"    outTime \n" +
+				"GROUP BY\n" +
+				"    Students.studentId", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
 	}
 
 	/**
