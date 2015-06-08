@@ -58,7 +58,7 @@ public class AttendanceDatabase
 		// Gets the data repository in write mode
 		SQLiteDatabase db = helper.getWritableDatabase();
 
-		db.rawQuery("UPDATE scanTimes SET outTime=? WHERE rowid=?", new String[]{Long.toString(currentDate.getTime()), Long.toString(scanInRowID)}).close();
+		db.execSQL("UPDATE scanTimes SET outTime=? WHERE rowid=?", new String[]{Long.toString(currentDate.getTime()), Long.toString(scanInRowID)});
 	}
 
 	public boolean studentExists(int studentID)
@@ -87,12 +87,12 @@ public class AttendanceDatabase
 
 		cursor.moveToFirst();
 
-		if(cursor.getCount() <= 0)
+		String retval = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+
+		if(retval.equals(" "))
 		{
 			return null;
 		}
-
-		String retval = cursor.getString(cursor.getColumnIndexOrThrow("name"));
 
 		cursor.close();
 
@@ -111,7 +111,7 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		// Create a new map of values, where column names are the keys
-		db.rawQuery("INSERT INTO Students(studentID, firstName, lastName) VALUES(?, ?, ?)", new String[]{Integer.toString(studentID), firstName, lastName}).close();
+		db.execSQL("INSERT INTO Students(studentID, firstName, lastName) VALUES (?, ?, ?)", new String[]{Integer.toString(studentID), firstName, lastName});
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class AttendanceDatabase
 		// Gets the data repository in write mode
 		SQLiteDatabase db = helper.getWritableDatabase();
 
-		db.rawQuery("UPDATE Students SET firstName=?, lastName=? WHERE studentID=?", new String[]{firstName, lastName, Integer.toString(studentID)}).close();
+		db.execSQL("UPDATE Students SET firstName=?, lastName=? WHERE studentID=?", new String[]{firstName, lastName, Integer.toString(studentID)});
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class AttendanceDatabase
 	{
 		SQLiteDatabase db = helper.getWritableDatabase();
 
-		db.rawQuery("DELETE FROM Students WHERE studentID=?", new String[]{Integer.toString(studentID)}).close();
+		db.execSQL("DELETE FROM Students WHERE studentID=?", new String[]{Integer.toString(studentID)});
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getReadableDatabase();
 
 		Cursor cursor = db.rawQuery("SELECT rowid FROM scanTimes WHERE " +
-				"studentID = ? AND outTime = NULL AND inTime > ?", new String[]{Integer.toString(studentID), Long.toString(recentScanCutoff.getTime())});
+				"studentID = ? AND outTime IS NULL AND inTime > ?", new String[]{Integer.toString(studentID), Long.toString(recentScanCutoff.getTime())});
 
 		cursor.moveToFirst();
 		Long rowid = null;

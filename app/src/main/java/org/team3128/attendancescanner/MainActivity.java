@@ -35,21 +35,24 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		database = new AttendanceDatabase(this);
+
+		//close the activity unless the user enters the password
+		// password disabled for ease of testing
+//		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
+//				finish();
+//			}
+//		});
 	}
 
 	@Override
 	protected void onStart()
 	{
 		super.onStart();
-		//close the activity unless the user enters the password
-		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				finish();
-			}
-		});
+
 	}
 
 	@Override

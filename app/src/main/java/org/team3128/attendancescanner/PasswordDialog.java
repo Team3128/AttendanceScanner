@@ -77,15 +77,15 @@ public class PasswordDialog
 			}
 		});
 
-		builder.setOnDismissListener(new DialogInterface.OnDismissListener()
-		{
-
-			@Override
-			public void onDismiss(DialogInterface dialog)
-			{
-				executeIfFailed.run();
-			}
-		});
+		//builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+//		{
+//
+//			@Override
+//			public void onDismiss(DialogInterface dialog)
+//			{
+//				executeIfFailed.run();
+//			}
+//		});
 
 		builder.show();
 	}
