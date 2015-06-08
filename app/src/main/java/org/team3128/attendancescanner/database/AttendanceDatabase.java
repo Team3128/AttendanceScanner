@@ -111,7 +111,7 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		// Create a new map of values, where column names are the keys
-		db.rawQuery("INSERT INTO Students(?, ?, ?)", new String[]{Integer.toString(studentID), firstName, lastName}).close();
+		db.rawQuery("INSERT INTO Students(studentID, firstName, lastName) VALUES(?, ?, ?)", new String[]{Integer.toString(studentID), firstName, lastName}).close();
 	}
 
 	/**

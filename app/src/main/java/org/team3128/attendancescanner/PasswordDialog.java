@@ -37,6 +37,9 @@ public class PasswordDialog
 		// layout and inflater
 		View content = inflater.inflate(R.layout.dialog_password, null);
 		builder.setView(content);
+
+		builder.setTitle(R.string.password_dialog_title);
+
 		final EditText passwordText = (EditText) content.findViewById(R.id.passwordEditText);
 
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
@@ -65,5 +68,25 @@ public class PasswordDialog
 			}
 		});
 
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				executeIfFailed.run();
+			}
+		});
+
+		builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+		{
+
+			@Override
+			public void onDismiss(DialogInterface dialog)
+			{
+				executeIfFailed.run();
+			}
+		});
+
+		builder.show();
 	}
 }

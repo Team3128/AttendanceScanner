@@ -7,15 +7,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/password_dialog_message"
+        android:text="@string/manual_enter_student_id_message"
         android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="16sp"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/passwordEditText"
-        android:layout_gravity="center_horizontal"/>
+        android:ems="8"
+        android:id="@+id/studentIDText"
+        android:inputType="numberSigned"/>
 </LinearLayout>

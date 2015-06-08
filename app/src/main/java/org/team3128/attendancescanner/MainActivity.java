@@ -1,20 +1,16 @@
 package org.team3128.attendancescanner;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 import org.team3128.attendancescanner.database.AttendanceOpenHelper;
@@ -24,8 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 
 public class MainActivity extends Activity
@@ -33,46 +27,29 @@ public class MainActivity extends Activity
 
 	private final static int FILE_PICKER_REQUEST_CODE = 1;
 
-	public TextView consoleTextView;
-
-	public Button scanButton;
-
-	public AttendanceDatabase database;
+	AttendanceDatabase database;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		consoleTextView = (TextView) findViewById(R.id.consoleTextView);
-		scanButton = (Button) findViewById(R.id.scanButton);
-		scanButton.setOnClickListener(new View.OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				invokeScan();
-			}
-		});
-
 		database = new AttendanceDatabase(this);
 	}
 
 	@Override
-	protected void onResume()
+	protected void onStart()
 	{
-		super.onResume();
-	}
-
-	private void invokeScan()
-	{
-		IntentIntegrator integrator = new IntentIntegrator(this);
-		integrator.addExtra("SCAN_WIDTH", 800);
-		integrator.addExtra("SCAN_HEIGHT", 300);
-		integrator.addExtra("RESULT_DISPLAY_DURATION_MS", 0);
-		integrator.addExtra("PROMPT_MESSAGE", "Scan Student ID");
-		integrator.initiateScan(IntentIntegrator.ONE_D_CODE_TYPES);
+		super.onStart();
+		//close the activity unless the user enters the password
+		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				finish();
+			}
+		});
 	}
 
 	@Override
@@ -80,6 +57,7 @@ public class MainActivity extends Activity
 	{
 		if(requestCode == FILE_PICKER_REQUEST_CODE)
 		{
+
 			//check if the user pressed cancel
 			if(intent != null)
 			{
@@ -101,51 +79,6 @@ public class MainActivity extends Activity
 				}
 			}
 
-			return;
-
-		}
-
-		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-		if (result != null)
-		{
-			String contents = result.getContents();
-			if(contents != null)
-			{
-				try
-				{
-					int id = Integer.parseInt(contents);
-					String name = database.getStudentName(id);
-
-					//if the last scan in was before this time, we will assume that they forgot to scan out and start a new scan
-					Calendar recentScanCutoff = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-					recentScanCutoff.add(Calendar.HOUR, -12);
-
-					Long scanInRowID = database.getMostRecentScanIn(id, recentScanCutoff.getTime());
-
-					consoleTextView.append("Scanned " + (name != null ? name : id) + (scanInRowID != null ? " out.\n" : " in.\n"));
-
-					if(scanInRowID != null)
-					{
-						database.addScanOut(scanInRowID);
-					}
-					else
-					{
-						database.addScanIn(id);
-					}
-				}
-				catch(NumberFormatException ex)
-				{
-					consoleTextView.append("Invalid student ID!\n");
-				}
-			}
-            else
-            {
-                consoleTextView.append("Scan Error\n");
-            }
-		}
-		else
-		{
-			consoleTextView.append("Scan Cancelled\n");
 		}
 	}
 
@@ -153,15 +86,6 @@ public class MainActivity extends Activity
 	public void onPause()
 	{
 		super.onPause();
-	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
 	}
 
 	/**
@@ -179,7 +103,7 @@ public class MainActivity extends Activity
 		dst.close();
 	}
 
-	private void backupDatabase()
+	public void backupDatabase(View view)
 	{
 		File backupLocation = new File(Environment.getExternalStorageDirectory(), AttendanceOpenHelper.DATABASE_NAME);
 		File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
@@ -205,37 +129,52 @@ public class MainActivity extends Activity
 		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
+	public void viewAttendance(View view)
 	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
-		if(id == R.id.action_student_names)
-		{
-			startActivity(new Intent(this, StudentNameActivity.class));
-			return true;
-		}
-		else if(id == R.id.action_view_attendance)
-		{
-			startActivity(new Intent(this, AttendanceActivity.class));
-			return true;
-		}
-		else if(id == R.id.action_export_database)
-		{
-			backupDatabase();
-		}
-		else if(id == R.id.action_import_database)
-		{
-			backupDatabase();
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setType("file/*");
-			intent.putExtra("com.estrongs.intent.extra.TITLE", "Import Database");
-
-			startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
-		}
-		return super.onOptionsItemSelected(item);
+		startActivity(new Intent(this, AttendanceActivity.class));
 	}
+
+	public void editStudentNames(View view)
+	{
+		startActivity(new Intent(this, StudentNameActivity.class));
+	}
+
+	public void importDatabase(View view)
+	{
+		backupDatabase(null);
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("file/*");
+		intent.putExtra("com.estrongs.intent.extra.TITLE", "Import Database");
+
+		startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+	}
+
+	public void manualInput(View view)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// layout and inflater
+		View content = getLayoutInflater().inflate(R.layout.dialog_manual_id_input, null);
+		builder.setView(content);
+
+		builder.setTitle(R.string.password_dialog_title);
+
+		final EditText studentIDText = (EditText) content.findViewById(R.id.studentIDText);
+
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				String studentID = studentIDText.getText().toString();
+				String message = AutoScanActivity.processScan(database, studentID);
+
+				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+			}
+		});
+
+		builder.setNegativeButton(android.R.string.cancel, null);
+
+		builder.show();
+	}
+
 }

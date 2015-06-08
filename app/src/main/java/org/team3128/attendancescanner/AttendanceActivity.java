@@ -43,15 +43,14 @@ public class AttendanceActivity extends Activity implements DatePickerDialog.OnD
 		attendanceDatabase = new AttendanceDatabase(this);
 
 		//if the date was not already set, set it to the date of the most recent scan.
-		if(savedInstanceState != null)
+		if (savedInstanceState != null)
 		{
 			Log.i("AttendanceActivity", "Loading saved filter.");
 			year = savedInstanceState.getInt("year");
 			month = savedInstanceState.getInt("month");
 			day = savedInstanceState.getInt("day");
 
-		}
-		else
+		} else
 		{
 			Calendar mostRecentScan = attendanceDatabase.getMostRecentScanTime();
 			year = mostRecentScan.get(Calendar.YEAR);
@@ -61,15 +60,7 @@ public class AttendanceActivity extends Activity implements DatePickerDialog.OnD
 
 		setDateFilter();
 
-		//close the activity if the user enters
-		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				finish();
-			}
-		});
+
 	}
 
 	@Override
