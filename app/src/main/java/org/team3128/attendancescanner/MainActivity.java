@@ -137,6 +137,11 @@ public class MainActivity extends Activity
 		startActivity(new Intent(this, AttendanceActivity.class));
 	}
 
+	public void viewTotalTimes(View view)
+	{
+		startActivity(new Intent(this, TotalAttendanceActivity.class));
+	}
+
 	public void editStudentNames(View view)
 	{
 		startActivity(new Intent(this, StudentNameActivity.class));

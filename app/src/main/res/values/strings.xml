@@ -33,5 +33,9 @@
     <string name="manual_input">Manual Input</string>
     <string name="manual_enter_student_id_message">Enter the Student ID of the student to check in or out.</string>
     <string name="manual_enter_student_id_title">Manual Input</string>
+    <string name="totals_from_labels">Totals from:</string>
+    <string name="to_label">to</string>
+    <string name="view_totals_label">View Total Times</string>
+    <string name="title_activity_totals">Total Attendance</string>
 
 </resources>

@@ -35,6 +35,11 @@
             android:name="org.team3128.attendancescanner.AttendanceActivity"
             android:label="@string/title_activity_attendance" >
         </activity>
+        <activity
+            android:name="org.team3128.attendancescanner.TotalAttendanceActivity"
+            android:theme="@android:style/Theme.Holo"
+            android:label="@string/title_activity_totals" >
+        </activity>
     </application>
 
 </manifest>
