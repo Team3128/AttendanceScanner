@@ -164,7 +164,7 @@ public class MainActivity extends Activity
 		View content = getLayoutInflater().inflate(R.layout.dialog_manual_id_input, null);
 		builder.setView(content);
 
-		builder.setTitle(R.string.password_dialog_title);
+		builder.setTitle(R.string.manual_enter_student_id_title);
 
 		final EditText studentIDText = (EditText) content.findViewById(R.id.studentIDText);
 

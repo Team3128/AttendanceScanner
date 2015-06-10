@@ -44,7 +44,7 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 		String lastName = cursor.getString(cursor.getColumnIndexOrThrow("lastName"));
 
 		String fullName;
-		if(firstName == null && lastName == null)
+		if(firstName.isEmpty() && lastName.isEmpty())
 		{
 			//if the person scanned does not have a name set, use their student ID instead
 			fullName = Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow("studentID")));
@@ -58,7 +58,7 @@ public class AttendanceCursorAdaptor extends CursorAdapter
 
 		//set in and out times
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm", Locale.US);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("kk:mm a", Locale.US);
 
 		int timeInIndex = cursor.getColumnIndexOrThrow("inTime");
 		int timeOutIndex = cursor.getColumnIndexOrThrow("outTime");

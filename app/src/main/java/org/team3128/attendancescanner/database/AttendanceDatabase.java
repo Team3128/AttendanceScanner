@@ -87,6 +87,12 @@ public class AttendanceDatabase
 
 		cursor.moveToFirst();
 
+		//student not in the database
+		if(cursor.getCount() <= 0)
+		{
+			return null;
+		}
+
 		String retval = cursor.getString(cursor.getColumnIndexOrThrow("name"));
 
 		if(retval.equals(" "))
