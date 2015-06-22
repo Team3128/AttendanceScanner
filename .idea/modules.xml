@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AttendanceScanner.iml" filepath="$PROJECT_DIR$/AttendanceScanner.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/attenancescanner.iml" filepath="$PROJECT_DIR$/app/attenancescanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/attendance-app.iml" filepath="$PROJECT_DIR$/attendance-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/barcodeapi/barcodeapi.iml" filepath="$PROJECT_DIR$/barcodeapi/barcodeapi.iml" />
       <module fileurl="file://$PROJECT_DIR$/nanohttpd-core/nanohttpd-core.iml" filepath="$PROJECT_DIR$/nanohttpd-core/nanohttpd-core.iml" />
     </modules>
