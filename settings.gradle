@@ -1,1 +1,1 @@
-include ':app', ':barcodeapi', ':nanohttpd-core'
+include ':attendance-app', ':barcodeapi', ':nanohttpd-core'
