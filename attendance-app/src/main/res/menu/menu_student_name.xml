@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="org.team3128.attendancescanner.StudentNameActivity">
+    <item android:id="@+id/action_add_student"
+        android:title="@string/add_student"
+        android:showAsAction="ifRoom|withText"
+        android:icon="@android:drawable/ic_menu_add"/>
+</menu>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.team3128.attendancescanner" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="org.team3128.attendancescanner.MainActivity"
+            android:label="@string/admin_activity_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.team3128.attendancescanner.AutoScanActivity"
+            android:label="@string/autoscan_label" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.team3128.attendancescanner.StudentNameActivity"
+            android:label="@string/title_activity_student_name" >
+        </activity>
+        <activity
+            android:name="org.team3128.attendancescanner.AttendanceActivity"
+            android:label="@string/title_activity_attendance" >
+        </activity>
+        <activity
+            android:name="org.team3128.attendancescanner.TotalAttendanceActivity"
+            android:theme="@android:style/Theme.Holo"
+            android:label="@string/title_activity_totals" >
+        </activity>
+    </application>
+
+</manifest>

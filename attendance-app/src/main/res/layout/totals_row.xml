@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        android:textSize="8pt"
+        android:layout_weight=".8"
+        android:layout_margin="15dp"
+        android:id="@+id/nameTextView"
+ />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="fill_parent"
+        android:background="#c0c0c0"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/total_time"
+        android:textSize="10pt"
+        android:layout_weight=".5"
+        android:padding="1dp"
+        android:id="@+id/totalTimeTextView"
+        android:gravity="center"/>
+
+</LinearLayout>
