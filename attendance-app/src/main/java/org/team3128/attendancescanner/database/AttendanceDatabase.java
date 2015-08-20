@@ -270,4 +270,14 @@ public class AttendanceDatabase
 
 		return rowid;
 	}
+
+	/**
+	 * Remove all scans from the scans table.
+	 */
+	public void clearScansTable()
+	{
+		SQLiteDatabase db = helper.getWritableDatabase();
+
+		db.execSQL("DELETE FROM scanTimes");
+	}
 }

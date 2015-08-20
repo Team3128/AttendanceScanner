@@ -37,5 +37,9 @@
     <string name="to_label">to</string>
     <string name="view_totals_label">View Total Times</string>
     <string name="title_activity_totals">Total Attendance</string>
-
+    <string name="clear_database">Clear Database</string>
+    <string name="areyousure">Are you sure?</string>
+    <string name="areyoureallysure">Are you REALLY sure?</string>
+    <string name="delete_all_records">This will delete all attendance records!</string>
+    <string name="might_want_this_someday">You might want these records someday!</string>
 </resources>

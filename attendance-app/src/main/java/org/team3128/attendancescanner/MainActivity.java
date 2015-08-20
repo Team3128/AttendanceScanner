@@ -2,6 +2,7 @@ package org.team3128.attendancescanner;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -112,7 +114,7 @@ public class MainActivity extends Activity
 		File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
 
 		Log.d("MainActivity", "Attempting to copy " + database.getPath() + " to " + backupLocation.getPath());
-		if(database.exists() && backupLocation.canWrite())
+		if(database.exists())
 		{
 			try
 			{
@@ -121,14 +123,19 @@ public class MainActivity extends Activity
 			}
 			catch (IOException e)
 			{
-				Log.e("MainActivity", "Error backing up database");
+				Log.e("MainActivity", "Error backing up database to " + backupLocation.getPath());
 				e.printStackTrace();
+
+				Toast.makeText(this, "Error backing up database: Can't copy file.", Toast.LENGTH_LONG).show();
+
 			}
 
 		}
 		else
 		{
 			Log.e("MainActivity", "Could not back up database: database not found or can't write to output file.");
+
+			Toast.makeText(this, "Error backing up database: Database doesn't exist.", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -149,7 +156,9 @@ public class MainActivity extends Activity
 
 	public void importDatabase(View view)
 	{
-		backupDatabase(null);
+		//I feel like this does more harm than good.
+		//backupDatabase(null);
+
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("file/*");
 		intent.putExtra("com.estrongs.intent.extra.TITLE", "Import Database");
@@ -177,6 +186,48 @@ public class MainActivity extends Activity
 				String message = AutoScanActivity.processScan(database, studentID);
 
 				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+			}
+		});
+
+		builder.setNegativeButton(android.R.string.cancel, null);
+
+		Dialog dialog = builder.show();
+
+		//force show keyboard
+		dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+	}
+	public void clearDatabase(View view)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.areyousure);
+		builder.setMessage(R.string.delete_all_records);
+
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+				builder.setTitle(R.string.areyoureallysure);
+				builder.setMessage(R.string.might_want_this_someday);
+
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+				{
+
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						database.clearScansTable();
+
+						Toast.makeText(MainActivity.this, "Scan database cleared.", Toast.LENGTH_SHORT).show();
+					}
+				});
+
+				builder.setNegativeButton(android.R.string.cancel, null);
+
+				builder.show();
 			}
 		});
 
