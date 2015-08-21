@@ -44,7 +44,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/export_database"
+        android:text="@string/backup_database"
         android:id="@+id/exportDatabaseButton"
         android:drawableLeft="@android:drawable/ic_menu_set_as"
         android:drawableStart="@android:drawable/ic_menu_set_as"
@@ -62,9 +62,19 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/exportcsv"
+        android:id="@+id/exportCSVButton"
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+        android:drawableStart="@android:drawable/ic_menu_sort_by_size"
+        android:onClick="exportToCSV"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/clear_database"
-        android:id="@+id/button"
+        android:id="@+id/clearDatabasebutton"
         android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
         android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
         android:onClick="clearDatabase"/>
+
 </LinearLayout>

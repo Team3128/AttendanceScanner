@@ -3,6 +3,7 @@ package org.team3128.attendancescanner;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,12 +15,15 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.opencsv.CSVWriter;
+
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 import org.team3128.attendancescanner.database.AttendanceOpenHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
@@ -234,6 +238,29 @@ public class MainActivity extends Activity
 		builder.setNegativeButton(android.R.string.cancel, null);
 
 		builder.show();
+	}
+
+	public void exportToCSV(View view)
+	{
+		ProgressDialog dialog = new ProgressDialog(this);
+		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+		File exportLocation = new File(Environment.getExternalStorageDirectory(), "attendancerecords.csv");
+		Toast.makeText(this, "Exporting attendance data to " + exportLocation.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+
+		try
+		{
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(exportLocation));
+
+			CSVExporterAsyncTask exporter = new CSVExporterAsyncTask();
+			dialog.show();
+			exporter.execute(csvWriter, database, dialog);
+		}
+		catch(Exception ex)
+		{
+			Toast.makeText(this, "Error exporting", Toast.LENGTH_SHORT).show();
+			ex.printStackTrace();
+		}
 	}
 
 }
