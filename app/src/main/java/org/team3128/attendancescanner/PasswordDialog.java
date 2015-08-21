@@ -18,6 +18,13 @@ import java.util.Arrays;
  */
 public class PasswordDialog
 {
+	/**
+	 * Used to tell the onDismissListener whether the user entered the right password or not.
+	 *
+	 * This really should be an instance variable, but I'm using a dialog builder, so I can't do that.
+	 */
+	static boolean gaveCorrectPassword;
+
 	//SHA-256 sum of the mentor password
 	//bet you thought that you could find out what it was by looking here on GitHub, didn't you!
 	private final static byte[] mentorPasswordSHA256 = {(byte) 0xae, (byte) 0xe6, (byte) 0xbc, (byte) 0xd3, (byte) 0x4a, (byte) 0xb5,
@@ -60,32 +67,34 @@ public class PasswordDialog
 					e.printStackTrace();
 				}
 
-				if(!Arrays.equals(entered, mentorPasswordSHA256))
+				if(Arrays.equals(entered, mentorPasswordSHA256))
+				{
+					gaveCorrectPassword = true;
+				}
+				else
 				{
 					Toast.makeText(context, R.string.password_incorrect, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+
+		builder.setNegativeButton(android.R.string.cancel, null);
+
+		builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+		{
+
+			@Override
+			public void onDismiss(DialogInterface dialog)
+			{
+				if (!gaveCorrectPassword)
+				{
 					executeIfFailed.run();
 				}
 			}
 		});
 
-		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				executeIfFailed.run();
-			}
-		});
 
-		//builder.setOnDismissListener(new DialogInterface.OnDismissListener()
-//		{
-//
-//			@Override
-//			public void onDismiss(DialogInterface dialog)
-//			{
-//				executeIfFailed.run();
-//			}
-//		});
+		gaveCorrectPassword = false;
 
 		builder.show();
 	}
