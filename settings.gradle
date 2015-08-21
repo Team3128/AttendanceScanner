@@ -1,1 +1,1 @@
-include ':attendance-app', ':barcodeapi'
+include ':app'
