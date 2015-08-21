@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 
@@ -14,35 +14,41 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class AutoScanActivity extends Activity
+
+public class AutoScanActivity extends Activity implements ZXingScannerView.ResultHandler
 {
 	public AttendanceDatabase database;
 
-	private ArrayList<String> codeTypes;
+	private ZXingScannerView scannerView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_scanner);
+
+		scannerView = (ZXingScannerView) findViewById(R.id.scannerView);
 
 		database = new AttendanceDatabase(this);
-		codeTypes = new ArrayList<String>();
+
+		scannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+
 
 		//student ID's have code 39 barcodes
-		codeTypes.add("CODE_39");
+		ArrayList<BarcodeFormat> acceptableFormats = new ArrayList<BarcodeFormat>();
+		acceptableFormats.add(BarcodeFormat.CODE_39);
+		scannerView.setFormats(acceptableFormats);
+		scannerView.setFocusableInTouchMode(true);
+
 		invokeScan();
 	}
 
 
 	private void invokeScan()
 	{
-		IntentIntegrator integrator = new IntentIntegrator(this);
-		integrator.addExtra("SCAN_WIDTH", 800);
-		integrator.addExtra("SCAN_HEIGHT", 300);
-		integrator.addExtra("RESULT_DISPLAY_DURATION_MS", 0);
-		integrator.addExtra("PROMPT_MESSAGE", "Scan Student ID");
-		integrator.initiateScan(codeTypes);
+		scannerView.startCamera();
 	}
 
 	/**
@@ -94,17 +100,27 @@ public class AutoScanActivity extends Activity
 		return result;
 	}
 
+
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent)
+	public void onResume() {
+		super.onResume();
+		scannerView.startCamera();          // Start camera on resume
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		scannerView.stopCamera();           // Stop camera on pause
+	}
+
+	@Override
+	public void handleResult(Result result)
 	{
-
-		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-
 		String toastMessage;
 
 		if (result != null)
 		{
-			toastMessage = processScan(database, result.getContents());
+			toastMessage = processScan(database, result.getText());
 		}
 		else
 		{
@@ -114,11 +130,5 @@ public class AutoScanActivity extends Activity
 		Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
 
 		invokeScan();
-	}
-
-	@Override
-	public void onPause()
-	{
-		super.onPause();
 	}
 }

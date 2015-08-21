@@ -244,6 +244,7 @@ public class MainActivity extends Activity
 	{
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		dialog.setTitle(R.string.exporting_records);
 
 		File exportLocation = new File(Environment.getExternalStorageDirectory(), "attendancerecords.csv");
 		Toast.makeText(this, "Exporting attendance data to " + exportLocation.getAbsolutePath(), Toast.LENGTH_SHORT).show();

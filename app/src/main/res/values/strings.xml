@@ -43,4 +43,5 @@
     <string name="delete_all_records">This will delete all attendance records!</string>
     <string name="might_want_this_someday">You might want these records someday!</string>
     <string name="exportcsv">Export to CSV</string>
+    <string name="exporting_records">Exporting Records</string>
 </resources>
