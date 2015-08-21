@@ -293,12 +293,12 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getReadableDatabase();
 
 		Cursor results = db.rawQuery("SELECT studentID, " +
-					"DATETIME(inTime) AS inTimeString," +
-					"DATETIME(outTime) AS outTimeString," +
+					"DATETIME(inTime/1000, 'unixepoch') AS inTimeString," +
+					"DATETIME(outTime/1000, 'unixepoch') AS outTimeString " +
 				"FROM " +
-					"scanTimes" +
+					"scanTimes " +
 				"ORDER BY " +
-					"outTime DESCENDING", new String[0]);
+					"outTime DESC", new String[0]);
 
 		return results;
 

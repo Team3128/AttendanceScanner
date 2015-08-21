@@ -44,6 +44,8 @@ public class CSVExporterAsyncTask extends AsyncTask<Object, Integer, Object>
 		int inTimeStringColumn = scansCursor.getColumnIndexOrThrow("inTimeString");
 		int outTimeStringColumn = scansCursor.getColumnIndexOrThrow("outTimeString");
 
+		scansCursor.moveToFirst();
+
 		final int totalRows = scansCursor.getCount();
 
 		int index = 1;
@@ -79,6 +81,11 @@ public class CSVExporterAsyncTask extends AsyncTask<Object, Integer, Object>
 		if(scansCursor != null)
 		{
 			scansCursor.close();
+		}
+
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
 		}
 	}
 
