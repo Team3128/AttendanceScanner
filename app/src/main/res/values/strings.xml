@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Attendance Scanner</string>
-    <string name="admin_activity_name">Attendance Scanner Admin</string>
+    <string name="admin_activity_name">Attendance Admin</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="initializing">Initializing...</string>
@@ -29,7 +29,7 @@
     <string name="time_in">Time In</string>
     <string name="time_out">Time Out</string>
     <string name="total_time">Total Time</string>
-    <string name="autoscan_label">Automatic Scan</string>
+    <string name="autoscan_label">Scanner</string>
     <string name="manual_input">Manual Input</string>
     <string name="manual_enter_student_id_message">Enter the Student ID of the student to check in or out.</string>
     <string name="manual_enter_student_id_title">Manual Input</string>
@@ -44,4 +44,7 @@
     <string name="might_want_this_someday">You might want these records someday!</string>
     <string name="exportcsv">Export to CSV</string>
     <string name="exporting_records">Exporting Records</string>
+    <string name="enable_autofocus">Enable Autofocus</string>
+    <string name="disable_autofocus">Disable Autofocus</string>
+    <string name="admin_interface">Admin Interface</string>
 </resources>

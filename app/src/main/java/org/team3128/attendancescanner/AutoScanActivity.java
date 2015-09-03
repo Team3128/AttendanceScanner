@@ -3,6 +3,9 @@ package org.team3128.attendancescanner;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -23,6 +26,8 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 
 	private ZXingScannerView scannerView;
 
+	private boolean isAutoFocusing = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -40,15 +45,9 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 		ArrayList<BarcodeFormat> acceptableFormats = new ArrayList<BarcodeFormat>();
 		acceptableFormats.add(BarcodeFormat.CODE_39);
 		scannerView.setFormats(acceptableFormats);
-		scannerView.setFocusableInTouchMode(true);
-
-		invokeScan();
-	}
+		scannerView.setAutoFocus(true);
 
 
-	private void invokeScan()
-	{
-		scannerView.startCamera();
 	}
 
 	/**
@@ -129,6 +128,54 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 
 		Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
 
-		invokeScan();
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				scannerView.startCamera();
+				scannerView.setAutoFocus(isAutoFocusing);
+			}
+		}, 500);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if(item.getItemId() == R.id.action_toggle_autofocus)
+		{
+			if(isAutoFocusing)
+			{
+				isAutoFocusing = false;
+				item.setTitle(R.string.enable_autofocus);
+
+				scannerView.setAutoFocus(isAutoFocusing);
+			}
+			else
+			{
+				isAutoFocusing = true;
+				item.setTitle(R.string.disable_autofocus);
+
+				scannerView.setAutoFocus(isAutoFocusing);
+			}
+
+			return true;
+		}
+		else if(item.getItemId() == R.id.action_admin_interface)
+		{
+			startActivity(new Intent(this, MainActivity.class));
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_scanner, menu);
+		return true;
 	}
 }

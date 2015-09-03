@@ -39,7 +39,7 @@ public class TotalsCursorAdaptor extends CursorAdapter
 		String lastName = cursor.getString(cursor.getColumnIndexOrThrow("lastName"));
 
 		String fullName;
-		if(firstName == null && lastName == null)
+		if(firstName.isEmpty() && lastName.isEmpty())
 		{
 			//if the person scanned does not have a name set, use their student ID instead
 			fullName = Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow("studentID")));

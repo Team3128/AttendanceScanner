@@ -85,7 +85,7 @@ public class AttendanceDatabase
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		Cursor cursor = db.rawQuery("SELECT PRINTF(\"%s %s\", firstName, lastName) as name FROM students WHERE studentID=?", new String[]{Integer.toString(studentID)});
+		Cursor cursor = db.rawQuery("SELECT firstName, lastName FROM students WHERE studentID=?", new String[]{Integer.toString(studentID)});
 
 		cursor.moveToFirst();
 
@@ -95,16 +95,21 @@ public class AttendanceDatabase
 			return null;
 		}
 
-		String retval = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+		StringBuilder fullName = new StringBuilder();
+		fullName.append(cursor.getString(cursor.getColumnIndexOrThrow("firstName")));
+		fullName.append(' ');
+		fullName.append(cursor.getString(cursor.getColumnIndexOrThrow("lastName")));
 
-		if(retval.equals(" "))
+		String nameString = fullName.toString();
+
+		if(nameString.equals(" "))
 		{
 			return null;
 		}
 
 		cursor.close();
 
-		return retval;
+		return nameString;
 	}
 
 	/**
