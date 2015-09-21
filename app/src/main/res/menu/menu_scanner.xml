@@ -8,4 +8,7 @@
       <item android:id="@+id/action_admin_interface"
             android:title="@string/admin_interface"
             android:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/action_toggle_camera"
+          android:title="@string/disable_camera_scanner"
+          android:showAsAction="ifRoom|withText"/>
 </menu>

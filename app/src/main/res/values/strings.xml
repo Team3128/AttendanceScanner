@@ -47,4 +47,6 @@
     <string name="enable_autofocus">Enable Autofocus</string>
     <string name="disable_autofocus">Disable Autofocus</string>
     <string name="admin_interface">Admin Interface</string>
+    <string name="disable_camera_scanner">Disable Camera</string>
+    <string name="enable_camera_scanner">Enable Camera</string>
 </resources>

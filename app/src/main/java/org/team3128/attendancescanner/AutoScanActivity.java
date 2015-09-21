@@ -1,9 +1,13 @@
 package org.team3128.attendancescanner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -27,12 +31,23 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 	private ZXingScannerView scannerView;
 
 	private boolean isAutoFocusing = true;
+	boolean cameraEnabled;
+
+	final static String CAMERA_ENABLED_KEY = "camera_enabled";
+
+	//used to buffer barcodes as they're typed in
+	private StringBuilder numberCollector;
+
+	SharedPreferences preferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scanner);
+
+		preferences = getPreferences(Context.MODE_PRIVATE);
+		cameraEnabled = preferences.getBoolean(CAMERA_ENABLED_KEY, true);
 
 		scannerView = (ZXingScannerView) findViewById(R.id.scannerView);
 
@@ -47,6 +62,7 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 		scannerView.setFormats(acceptableFormats);
 		scannerView.setAutoFocus(true);
 
+		numberCollector = new StringBuilder();
 
 	}
 
@@ -103,13 +119,40 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 	@Override
 	public void onResume() {
 		super.onResume();
-		scannerView.startCamera();          // Start camera on resume
+
+		if(cameraEnabled)
+		{
+			scannerView.startCamera();          // Start camera on resume
+		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		scannerView.stopCamera();           // Stop camera on pause
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event)
+	{
+		char pressed = (char)event.getUnicodeChar();
+
+		//sent after a barcode has been typed in by the scanner
+		if(keyCode == KeyEvent.KEYCODE_ENTER)
+		{
+			processScan(database, numberCollector.toString());
+			numberCollector.setLength(0); //reset string builder
+		}
+		else if(Character.isDigit(pressed))
+		{
+			numberCollector.append(pressed);
+		}
+		else
+		{
+			return super.onKeyDown(keyCode, event);
+		}
+
+		return true;
 	}
 
 	@Override
@@ -137,7 +180,7 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 				scannerView.startCamera();
 				scannerView.setAutoFocus(isAutoFocusing);
 			}
-		}, 500);
+		}, 250);
 	}
 
 	@Override
@@ -166,6 +209,17 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 		{
 			startActivity(new Intent(this, MainActivity.class));
 		}
+		else if(item.getItemId() == R.id.action_toggle_camera)
+		{
+			cameraEnabled = !cameraEnabled;
+			preferences.edit().putBoolean(CAMERA_ENABLED_KEY, cameraEnabled).apply();
+			updateToggleCameraMenuText(item);
+
+			if(!cameraEnabled)
+			{
+				scannerView.stopCamera();
+			}
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -176,6 +230,18 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_scanner, menu);
+
+		updateToggleCameraMenuText(menu.findItem(R.id.action_toggle_camera));
+
 		return true;
+	}
+
+	/**
+	 * Update the text of the toggle camera menu item based on the cameraEnabled class variable
+	 * @param item
+	 */
+	private void updateToggleCameraMenuText(MenuItem item)
+	{
+		item.setTitle(cameraEnabled ? R.string.disable_camera_scanner : R.string.enable_camera_scanner);
 	}
 }
