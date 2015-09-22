@@ -140,7 +140,7 @@ public class AutoScanActivity extends Activity implements ZXingScannerView.Resul
 		//sent after a barcode has been typed in by the scanner
 		if(keyCode == KeyEvent.KEYCODE_ENTER)
 		{
-			processScan(database, numberCollector.toString());
+			Toast.makeText(this, processScan(database, numberCollector.toString()), Toast.LENGTH_LONG).show();
 			numberCollector.setLength(0); //reset string builder
 		}
 		else if(Character.isDigit(pressed))
