@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.team3128.attendancescanner.AutoScanActivity"
+            android:name=".scanner.ScannerActivity"
             android:label="@string/autoscan_label"
             android:screenOrientation="landscape">
             <intent-filter>

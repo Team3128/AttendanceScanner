@@ -19,6 +19,7 @@ import com.opencsv.CSVWriter;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 import org.team3128.attendancescanner.database.AttendanceOpenHelper;
+import org.team3128.attendancescanner.scanner.ScannerActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -187,7 +188,7 @@ public class MainActivity extends Activity
 			public void onClick(DialogInterface dialog, int which)
 			{
 				String studentID = studentIDText.getText().toString();
-				String message = AutoScanActivity.processScan(database, studentID);
+				String message = ScannerActivity.processScan(database, studentID);
 
 				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
 			}

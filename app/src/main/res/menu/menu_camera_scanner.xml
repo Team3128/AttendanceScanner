@@ -2,7 +2,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="org.team3128.attendancescanner.AttendanceActivity">
-      <item android:id="@+id/action_admin_interface"
-            android:title="@string/admin_interface"
+      <item android:id="@+id/action_toggle_autofocus"
+            android:title="@string/disable_autofocus"
             android:showAsAction="ifRoom|withText"/>
 </menu>

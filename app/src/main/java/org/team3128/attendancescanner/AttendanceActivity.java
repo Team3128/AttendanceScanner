@@ -18,6 +18,7 @@ import org.team3128.attendancescanner.database.AttendanceDatabase;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Activity for viewing the attendance of club members.
@@ -51,6 +52,7 @@ public class AttendanceActivity extends Activity implements CalendarView.OnDateC
 		if (savedInstanceState != null)
 		{
 			Log.i("AttendanceActivity", "Loading saved filter.");
+			date = new GregorianCalendar();
 			date.setTimeInMillis(savedInstanceState.getLong("date"));
 
 		}
