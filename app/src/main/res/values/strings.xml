@@ -49,4 +49,5 @@
     <string name="admin_interface">Admin Interface</string>
     <string name="waiting_for_scan">Waiting for scan....</string>
     <string name="screen_on_warning">NOTE: device must be unlocked and on this screen for scans to be processed</string>
+    <string name="disable_usb_scanner">Disable USB Scanner</string>
 </resources>

@@ -99,6 +99,10 @@ public class ScannerActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event)
 	{
+		if(!currentFragmentIsUSB)
+		{
+			swapInUSBFragment();
+		}
 		return usbScannerFragment.onKeyDown(keyCode, event);
 	}
 
@@ -122,31 +126,13 @@ public class ScannerActivity extends Activity
 		return true;
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig)
-	{
-		Toast.makeText(this, "USB Scanner Detected", Toast.LENGTH_SHORT).show();
-
-		if(newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO)
-		{
-			//scanner connected
-			swapInUSBFragment();
-
-		}
-		else if(newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES)
-		{
-			swapInCameraFragment();
-			Toast.makeText(this, "USB Scanner Disconnected", Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	private void swapInCameraFragment()
+	void swapInCameraFragment()
 	{
 		getFragmentManager().beginTransaction().replace(R.id.scanner_fragment_container, cameraScannerFragment).commit();
-		currentFragmentIsUSB = true;
+		currentFragmentIsUSB = false;
 	}
 
-	private void swapInUSBFragment()
+	void swapInUSBFragment()
 	{
 		getFragmentManager().beginTransaction().replace(R.id.scanner_fragment_container, usbScannerFragment).addToBackStack(null).commit();
 
