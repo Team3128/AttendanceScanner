@@ -99,11 +99,17 @@ public class ScannerActivity extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event)
 	{
-		if(!currentFragmentIsUSB)
+
+		if(keyCode != KeyEvent.KEYCODE_MENU && keyCode != KeyEvent.KEYCODE_BACK && keyCode != KeyEvent.KEYCODE_SEARCH && keyCode != KeyEvent.KEYCODE_APP_SWITCH)
 		{
-			swapInUSBFragment();
+			if (!currentFragmentIsUSB)
+			{
+				swapInUSBFragment();
+			}
+			return usbScannerFragment.onKeyDown(keyCode, event);
 		}
-		return usbScannerFragment.onKeyDown(keyCode, event);
+
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

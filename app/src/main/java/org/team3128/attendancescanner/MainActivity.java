@@ -241,7 +241,42 @@ public class MainActivity extends Activity
 		builder.show();
 	}
 
+	//AlertDialogs can't have instance variables, so this is neccesary
+	private static int selectedOption = -1;
+
 	public void exportToCSV(View view)
+	{
+		selectedOption = -1;
+
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.select_export_type);
+		builder.setSingleChoiceItems(R.array.csv_export_options, -1, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				selectedOption = which;
+
+				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+			}
+		});
+
+		builder.setNegativeButton(android.R.string.cancel, null);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				runCSVExport(selectedOption == 0);
+			}
+		});
+
+		AlertDialog dialog = builder.show();
+		dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+
+	}
+
+	private void runCSVExport(boolean exportTotals)
 	{
 		ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -256,7 +291,7 @@ public class MainActivity extends Activity
 
 			CSVExporterAsyncTask exporter = new CSVExporterAsyncTask();
 			dialog.show();
-			exporter.execute(csvWriter, database, dialog);
+			exporter.execute(csvWriter, database, dialog, exportTotals);
 		}
 		catch(Exception ex)
 		{

@@ -199,7 +199,7 @@ public class AttendanceDatabase
 	}
 
 	/**
-	 * Get a cursor containing total attendance times for students, as well their ID numbers.
+	 * Get a cursor containing total attendance times for students, as well as their names and ID numbers.
 	 *
 	 * Takes the start and end year, month, and day in local time as provided by the Android date selector.
 	 * @return
@@ -207,7 +207,7 @@ public class AttendanceDatabase
 	public Cursor getStudentTotalAttendanceTimes(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay)
 	{
 		Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-		calendar.set(startYear, startMonth, startDay, 23, 59);
+		calendar.set(startYear, startMonth, startDay, 0, 0);
 		Date startDate = calendar.getTime();
 		calendar.set(endYear, endMonth, endDay, 23, 59);
 		Date endDate = calendar.getTime();
@@ -224,12 +224,32 @@ public class AttendanceDatabase
 				"    INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID)\n" +
 				"WHERE\n" +
 				"    ScanTimes.inTime BETWEEN ? AND ?\n" +
-				"    AND\n" +
-				"    outTime \n" +
 				"GROUP BY\n" +
 				"    Students.studentId\n" +
 				"ORDER BY\n" +
 				"    totalTime DESC", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
+	}
+
+	/**
+	 * Get a cursor containing total attendance times for students, as well as their names and ID numbers.
+	 * @return
+	 */
+	public Cursor getStudentTotalAttendanceTimes()
+	{
+		SQLiteDatabase db = helper.getReadableDatabase();
+		return db.rawQuery("SELECT \n" +
+				"    Students.rowid AS _id, \n" +
+				"    Students.studentID, \n" +
+				"    Students.firstName, \n" +
+				"    Students.lastName,\n" +
+				"    SUM(ScanTimes.outTime - ScanTimes.inTime) AS totalTime\n" +
+				"FROM \n" +
+				"    Students\n" +
+				"    INNER JOIN ScanTimes ON(Students.studentID = ScanTimes.studentID)\n" +
+				"GROUP BY\n" +
+				"    Students.studentId\n" +
+				"ORDER BY\n" +
+				"    totalTime DESC", new String[0]);
 	}
 
 	/**
@@ -293,7 +313,7 @@ public class AttendanceDatabase
 	 * Get the scans table in a format suitable for CSV export.
 	 * @return
 	 */
-	public Cursor getScansForCSV()
+	public Cursor getScanTmesForCSV()
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 

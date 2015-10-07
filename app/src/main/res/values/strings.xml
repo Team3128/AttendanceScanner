@@ -50,4 +50,10 @@
     <string name="waiting_for_scan">Waiting for scan....</string>
     <string name="screen_on_warning">NOTE: device must be unlocked and on this screen for scans to be processed</string>
     <string name="disable_usb_scanner">Disable USB Scanner</string>
+    <string name="select_export_type">Select Export Type</string>
+
+    <string-array name="csv_export_options">
+        <item>Total Times</item>
+        <item>In/Out Times</item>
+    </string-array>
 </resources>

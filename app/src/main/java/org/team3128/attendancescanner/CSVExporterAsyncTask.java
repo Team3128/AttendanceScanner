@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.opencsv.CSVWriter;
 
 import org.team3128.attendancescanner.database.AttendanceDatabase;
+import org.team3128.attendancescanner.database.TotalsCursorAdaptor;
 
 import java.io.IOException;
 
@@ -21,9 +22,11 @@ import java.io.IOException;
  */
 public class CSVExporterAsyncTask extends AsyncTask<Object, Integer, Object>
 {
+	AttendanceDatabase database;
 	CSVWriter writer;
 	Cursor scansCursor;
 	ProgressDialog progressDialog;
+	boolean exportTotals;
 
 
 	@Override
@@ -32,17 +35,39 @@ public class CSVExporterAsyncTask extends AsyncTask<Object, Integer, Object>
 		try
 		{
 			writer = (CSVWriter) params[0];
-			scansCursor = ((AttendanceDatabase) params[1]).getScansForCSV();
+			database = (AttendanceDatabase) params[1];
 			progressDialog = (ProgressDialog) params[2];
+			exportTotals = (Boolean) params[3];
 		}
 		catch(ClassCastException ex)
 		{
 			throw new IllegalArgumentException(ex);
 		}
 
+		if(exportTotals)
+		{
+			scansCursor = database.getStudentTotalAttendanceTimes();
+		}
+		else
+		{
+			scansCursor = database.getScanTmesForCSV();
+		}
+
 		int studentIDColumn = scansCursor.getColumnIndexOrThrow("studentID");
-		int inTimeStringColumn = scansCursor.getColumnIndexOrThrow("inTimeString");
-		int outTimeStringColumn = scansCursor.getColumnIndexOrThrow("outTimeString");
+
+		int totalTimeColumn = 0;
+		int inTimeStringColumn = 0;
+		int outTimeStringColumn = 0;
+		if(exportTotals)
+		{
+			totalTimeColumn = scansCursor.getColumnIndexOrThrow("totalTime");
+		}
+		else
+		{
+			inTimeStringColumn = scansCursor.getColumnIndexOrThrow("inTimeString");
+			outTimeStringColumn = scansCursor.getColumnIndexOrThrow("outTimeString");
+		}
+
 
 		scansCursor.moveToFirst();
 
@@ -51,7 +76,16 @@ public class CSVExporterAsyncTask extends AsyncTask<Object, Integer, Object>
 		int index = 1;
 		do
 		{
-			String[] line = new String[]{Integer.toString(scansCursor.getInt(studentIDColumn)), scansCursor.getString(inTimeStringColumn), scansCursor.getString(outTimeStringColumn)};
+
+			String[] line = null;
+			if(exportTotals)
+			{
+				line = new String[]{Integer.toString(scansCursor.getInt(studentIDColumn)), TotalsCursorAdaptor.formatTotalTimeAsHours(scansCursor.getLong(totalTimeColumn))};
+			}
+			else
+			{
+				line = new String[]{Integer.toString(scansCursor.getInt(studentIDColumn)), scansCursor.getString(inTimeStringColumn), scansCursor.getString(outTimeStringColumn)};
+			}
 			writer.writeNext(line);
 
 			publishProgress(index, totalRows);

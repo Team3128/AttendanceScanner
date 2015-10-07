@@ -52,15 +52,25 @@ public class TotalsCursorAdaptor extends CursorAdapter
 		nameView.setText(fullName);
 
 		//set total times
+		long totalTime = cursor.getLong(cursor.getColumnIndexOrThrow("totalTime"));
+		totalTimeView.setText(formatTotalTimeAsHours(totalTime));
+	}
+
+	/**
+	 * Format the total time as retuned from the database as an hour string, e.g. "36:41"
+	 * @param totalTime total time that the person has attended in milliseconds
+	 * @return
+	 */
+	public static String formatTotalTimeAsHours(long totalTime)
+	{
 		//the date formatting is kind of tricky because the Java (<8) time library can't print
 		//hour values greater than 24, so there's no way to print, say, a day and a half as 36:00 (which is what we want).
 		//so we need to do it ourselves
-		long totalMilliseconds = cursor.getLong(cursor.getColumnIndexOrThrow("totalTime"));
-		long seconds = totalMilliseconds / 1000;
+		long seconds = totalTime / 1000;
 		int minutes = (int)(seconds / 60);
 		int hours = minutes / 60;
 		minutes %= 60;
 
-		totalTimeView.setText(String.format("%d:%02d", hours, minutes));
+		return String.format("%d:%02d", hours, minutes);
 	}
 }
