@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.team3128.attendancescanner.MainActivity;
@@ -35,6 +36,8 @@ public class ScannerActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scanner);
+
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
 		database = new AttendanceDatabase(this);
 
@@ -100,7 +103,7 @@ public class ScannerActivity extends Activity
 	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event)
 	{
 
-		if(keyCode != KeyEvent.KEYCODE_MENU && keyCode != KeyEvent.KEYCODE_BACK && keyCode != KeyEvent.KEYCODE_SEARCH && keyCode != KeyEvent.KEYCODE_APP_SWITCH)
+		if((keyCode != KeyEvent.KEYCODE_MENU && keyCode != KeyEvent.KEYCODE_BACK) && (keyCode != KeyEvent.KEYCODE_SEARCH && keyCode != KeyEvent.KEYCODE_APP_SWITCH))
 		{
 			if (!currentFragmentIsUSB)
 			{
