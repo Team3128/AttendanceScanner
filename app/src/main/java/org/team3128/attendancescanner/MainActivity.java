@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -36,23 +39,30 @@ public class MainActivity extends Activity
 
 	AttendanceDatabase database;
 
+	SharedPreferences preferences;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		database = new AttendanceDatabase(this);
+		preferences = getPreferences(Context.MODE_PRIVATE);
 
-		//close the activity unless the user enters the password
-		// password disabled for ease of testing
-		PasswordDialog.show(this, getLayoutInflater(), new Runnable()
+		String password = preferences.getString("password", "");
+
+		if (!password.isEmpty())
 		{
-			@Override
-			public void run()
+			//close the activity unless the user enters the password
+			PasswordDialog.show(this, savedInstanceState, getLayoutInflater(), Base64.decode(password, Base64.NO_WRAP), new Runnable()
 			{
-				finish();
-			}
-		});
+				@Override
+				public void run()
+				{
+					finish();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -257,7 +267,7 @@ public class MainActivity extends Activity
 			{
 				selectedOption = which;
 
-				((AlertDialog)dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+				((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
 			}
 		});
 

@@ -3,6 +3,7 @@ package org.team3128.attendancescanner;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -19,27 +20,35 @@ import java.util.Arrays;
 public class PasswordDialog
 {
 	/**
+	 * Used to remember the password entered so it can be saved in onSaveInstanceState
+	 */
+	static byte[] lastPasswordHash;
+
+	/**
 	 * Used to tell the onDismissListener whether the user entered the right password or not.
 	 *
 	 * This really should be an instance variable, but I'm using a dialog builder, so I can't do that.
 	 */
 	static boolean gaveCorrectPassword;
 
-	//SHA-256 sum of the mentor password
-	//bet you thought that you could find out what it was by looking here on GitHub, didn't you!
-	private final static byte[] mentorPasswordSHA256 = {(byte) 0xae, (byte) 0xe6, (byte) 0xbc, (byte) 0xd3, (byte) 0x4a, (byte) 0xb5,
-			(byte) 0xaf, (byte) 0xbf, (byte) 0xc1, (byte) 0x01, (byte) 0xf8, (byte) 0x1b, (byte) 0xed, (byte) 0x4b,
-			(byte) 0x06, (byte) 0xeb, (byte) 0xbe, (byte) 0xd3, (byte) 0x3c, (byte) 0x2b, (byte) 0xc0, (byte) 0x52,
-			(byte) 0xbb, (byte) 0xd8, (byte) 0x6c, (byte) 0x44, (byte) 0x96, (byte) 0xb5, (byte) 0x8c,
-			(byte) 0x41, (byte) 0x31, (byte) 0x82};
 	/**
 	 * Show a dialog requesting a password.
 	 * @param context context to use to create the dialog
 	 * @param inflater
 	 * @param executeIfFailed lambda to execute if the user does not enter the password
 	 */
-	public static void show(final Context context, LayoutInflater inflater, final Runnable executeIfFailed)
+	public static void show(final Context context, Bundle savedInstanceState, LayoutInflater inflater, final byte[] passwordSHA256, final Runnable executeIfFailed)
 	{
+		//check if user previously entered
+		if(savedInstanceState != null)
+		{
+			String lastPassword = savedInstanceState.getString("lastPasswordHash");
+			if(lastPassword != null && checkPassword(passwordSHA256, lastPassword))
+			{
+				return;
+			}
+		}
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		// layout and inflater
 		View content = inflater.inflate(R.layout.dialog_password, null);
@@ -54,26 +63,13 @@ public class PasswordDialog
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				byte[] entered = null;
-				try
-				{
-					MessageDigest digest = MessageDigest.getInstance("SHA-256");
-					entered = digest.digest(passwordText.getText().toString().getBytes("UTF-8"));
 
-				}
-				catch (NoSuchAlgorithmException | UnsupportedEncodingException e)
-				{
-					//this shouldn't happen unless the hardcoded strings are wrong
-					e.printStackTrace();
-				}
+				gaveCorrectPassword = checkPassword(passwordSHA256, passwordText.getText().toString());
 
-				if(Arrays.equals(entered, mentorPasswordSHA256))
-				{
-					gaveCorrectPassword = true;
-				}
-				else
+				if(!gaveCorrectPassword)
 				{
 					Toast.makeText(context, R.string.password_incorrect, Toast.LENGTH_SHORT).show();
+
 				}
 			}
 		});
@@ -97,5 +93,46 @@ public class PasswordDialog
 		gaveCorrectPassword = false;
 
 		builder.show();
+	}
+
+	public static byte[] getHash(String toHash)
+	{
+		try
+		{
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			return digest.digest(toHash.getBytes("UTF-8"));
+		}
+		catch (NoSuchAlgorithmException | UnsupportedEncodingException e)
+		{
+			//this shouldn't happen unless the hardcoded strings are wrong
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Checks if the provided password is correct, and saves the hash into lastPassword
+	 * @param correctPassword
+	 * @param enteredPassword
+	 * @return
+	 */
+	private static boolean checkPassword(byte[] correctPassword, String enteredPassword)
+	{
+		byte[] enteredHash = getHash(enteredPassword);
+		lastPasswordHash = enteredHash;
+
+		return Arrays.equals(correctPassword, enteredHash);
+	}
+
+	/**
+	 * Call this method from the activity's onSaveInstanceState method so that the password dialog doesn't
+	 * re-popup when the device is rotated.
+	 * @param toSaveTo
+	 * @return
+	 */
+	private static void onSaveInstanceState(Bundle toSaveTo)
+	{
+		toSaveTo.putByteArray("lastPasswordHash", lastPasswordHash);
 	}
 }

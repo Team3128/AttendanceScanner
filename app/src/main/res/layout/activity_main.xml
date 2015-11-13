@@ -5,76 +5,136 @@
                 android:orientation="vertical"
                 tools:context=".MainActivity">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/action_view_attendance"
-        android:id="@+id/viewAttendanceButton"
-        android:drawableLeft="@android:drawable/ic_menu_agenda"
-        android:drawableStart="@android:drawable/ic_menu_agenda"
-        android:onClick="viewAttendance"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/label_reports"
+        android:paddingTop="10dp"
+        android:paddingBottom="3dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/view_totals_label"
-        android:id="@+id/viewTotalsButton"
-        android:drawableLeft="@android:drawable/ic_menu_recent_history"
-        android:drawableStart="@android:drawable/ic_menu_recent_history"
-        android:onClick="viewTotalTimes"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
 
-    <Button
-        android:layout_width="wrap_content"
+    <GridLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/action_student_names"
-        android:id="@+id/studentNamesButton"
-        android:drawableLeft="@android:drawable/ic_menu_my_calendar"
-        android:drawableStart="@android:drawable/ic_menu_my_calendar"
-        android:onClick="editStudentNames"/>
+        android:columnCount="2">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_view_attendance"
+            android:id="@+id/viewAttendanceButton"
+            android:drawableLeft="@android:drawable/ic_menu_agenda"
+            android:drawableStart="@android:drawable/ic_menu_agenda"
+            android:onClick="viewAttendance"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_totals_label"
+            android:id="@+id/viewTotalsButton"
+            android:drawableLeft="@android:drawable/ic_menu_recent_history"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:onClick="viewTotalTimes"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/manual_input"
-        android:id="@+id/manualInputButton"
-        android:drawableLeft="@android:drawable/ic_menu_edit"
-        android:drawableStart="@android:drawable/ic_menu_edit"
-        android:onClick="manualInput"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exportcsv"
+            android:id="@+id/exportCSVButton"
+            android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+            android:drawableStart="@android:drawable/ic_menu_sort_by_size"
+            android:onClick="exportToCSV"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/backup_database"
-        android:id="@+id/exportDatabaseButton"
-        android:drawableLeft="@android:drawable/ic_menu_set_as"
-        android:drawableStart="@android:drawable/ic_menu_set_as"
-        android:onClick="backupDatabase"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_student_names"
+            android:id="@+id/studentNamesButton"
+            android:drawableLeft="@android:drawable/ic_menu_my_calendar"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:onClick="editStudentNames"/>
+    </GridLayout>
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/import_database"
-        android:id="@+id/importDatabaseButton"
-        android:drawableLeft="@android:drawable/ic_menu_add"
-        android:drawableStart="@android:drawable/ic_menu_add"
-        android:onClick="importDatabase"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/label_admin"
+        android:paddingTop="10dp"
+        android:paddingBottom="3dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/exportcsv"
-        android:id="@+id/exportCSVButton"
-        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
-        android:drawableStart="@android:drawable/ic_menu_sort_by_size"
-        android:onClick="exportToCSV"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
 
-    <Button
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/manual_input"
+            android:id="@+id/manualInputButton"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:drawableStart="@android:drawable/ic_menu_edit"
+            android:onClick="manualInput"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change Password"
+            android:id="@+id/changePasswordButton"
+            android:drawableLeft="@android:drawable/ic_menu_sort_alphabetically"
+            android:drawableStart="@android:drawable/ic_menu_sort_alphabetically"
+            android:onClick="manualInput"/>
+    </GridLayout>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/clear_database"
-        android:id="@+id/clearDatabasebutton"
-        android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
-        android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
-        android:onClick="clearDatabase"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/label_database"
+        android:paddingTop="10dp"
+        android:paddingBottom="3dp"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_database"
+            android:id="@+id/exportDatabaseButton"
+            android:drawableLeft="@android:drawable/ic_menu_set_as"
+            android:drawableStart="@android:drawable/ic_menu_set_as"
+            android:onClick="backupDatabase"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/import_database"
+            android:id="@+id/importDatabaseButton"
+            android:drawableLeft="@android:drawable/ic_menu_add"
+            android:drawableStart="@android:drawable/ic_menu_add"
+            android:onClick="importDatabase"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_database"
+            android:id="@+id/clearDatabasebutton"
+            android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+            android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
+            android:onClick="clearDatabase"/>
+
+    </GridLayout>
 
 </LinearLayout>
