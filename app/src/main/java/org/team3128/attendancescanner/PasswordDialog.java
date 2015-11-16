@@ -142,6 +142,9 @@ public class PasswordDialog
 	 */
 	public static void onSaveInstanceState(Bundle toSaveTo)
 	{
-		toSaveTo.putString("lastPassword", Base64.encodeToString(PasswordDialog.lastPasswordHash, Base64.NO_WRAP));
+		if(lastPasswordHash != null)
+		{
+			toSaveTo.putString("lastPassword", Base64.encodeToString(PasswordDialog.lastPasswordHash, Base64.NO_WRAP));
+		}
 	}
 }

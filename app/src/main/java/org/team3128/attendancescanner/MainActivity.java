@@ -343,7 +343,7 @@ public class MainActivity extends Activity
 			}
 		});
 
-		builder.setNeutralButton("No Password", new DialogInterface.OnClickListener()
+		builder.setNeutralButton(R.string.no_password, new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog, int which)

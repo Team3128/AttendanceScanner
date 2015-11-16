@@ -15,16 +15,10 @@
         <activity
             android:name="org.team3128.attendancescanner.MainActivity"
             android:label="@string/admin_activity_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".scanner.ScannerActivity"
-            android:label="@string/autoscan_label"
-            android:screenOrientation="landscape">
+            android:label="@string/autoscan_label">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
