@@ -54,6 +54,9 @@
     <string name="label_reports">Reports</string>
     <string name="label_database">Database</string>
     <string name="label_admin">Administration</string>
+    <string name="change_password">Change Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
 
     <string-array name="csv_export_options">
         <item>Total Times</item>

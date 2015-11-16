@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -34,7 +36,7 @@ public class PasswordDialog
 	/**
 	 * Show a dialog requesting a password.
 	 * @param context context to use to create the dialog
-	 * @param inflater
+	 * @param inflater the LayoutInflater to use for the dialog
 	 * @param executeIfFailed lambda to execute if the user does not enter the password
 	 */
 	public static void show(final Context context, Bundle savedInstanceState, LayoutInflater inflater, final byte[] passwordSHA256, final Runnable executeIfFailed)
@@ -42,10 +44,18 @@ public class PasswordDialog
 		//check if user previously entered
 		if(savedInstanceState != null)
 		{
-			String lastPassword = savedInstanceState.getString("lastPasswordHash");
-			if(lastPassword != null && checkPassword(passwordSHA256, lastPassword))
+			String lastPassword = savedInstanceState.getString("lastPassword");
+
+			if(lastPassword != null)
 			{
-				return;
+				byte[] lastPasswordBytes = Base64.decode(lastPassword, Base64.NO_WRAP);
+
+				if(Arrays.equals(passwordSHA256, lastPasswordBytes))
+				{
+					return;
+				}
+
+				Log.e("PasswordDialog", "...Huh?  The password stored in savedInstanceState was incorrect!  How did this happen?");
 			}
 		}
 
@@ -113,9 +123,8 @@ public class PasswordDialog
 
 	/**
 	 * Checks if the provided password is correct, and saves the hash into lastPassword
-	 * @param correctPassword
-	 * @param enteredPassword
-	 * @return
+	 * @param correctPassword the sha256 sum of the correct password
+	 * @param enteredPassword the plaintext entered password
 	 */
 	private static boolean checkPassword(byte[] correctPassword, String enteredPassword)
 	{
@@ -131,8 +140,8 @@ public class PasswordDialog
 	 * @param toSaveTo
 	 * @return
 	 */
-	private static void onSaveInstanceState(Bundle toSaveTo)
+	public static void onSaveInstanceState(Bundle toSaveTo)
 	{
-		toSaveTo.putByteArray("lastPasswordHash", lastPasswordHash);
+		toSaveTo.putString("lastPassword", Base64.encodeToString(PasswordDialog.lastPasswordHash, Base64.NO_WRAP));
 	}
 }

@@ -11,52 +11,58 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/label_reports"
         android:paddingTop="10dp"
-        android:paddingBottom="3dp"/>
+        android:paddingBottom="3dp"
+        android:paddingStart="4dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#c0c0c0"/>
 
-    <GridLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
+        android:layout_height="wrap_content">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_view_attendance"
             android:id="@+id/viewAttendanceButton"
-            android:drawableLeft="@android:drawable/ic_menu_agenda"
             android:drawableStart="@android:drawable/ic_menu_agenda"
-            android:onClick="viewAttendance"/>
+            android:onClick="viewAttendance"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/view_totals_label"
             android:id="@+id/viewTotalsButton"
-            android:drawableLeft="@android:drawable/ic_menu_recent_history"
             android:drawableStart="@android:drawable/ic_menu_recent_history"
-            android:onClick="viewTotalTimes"/>
+            android:onClick="viewTotalTimes"
+            android:layout_below="@+id/viewAttendanceButton"
+            android:layout_alignParentStart="true"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/exportcsv"
             android:id="@+id/exportCSVButton"
-            android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
             android:drawableStart="@android:drawable/ic_menu_sort_by_size"
-            android:onClick="exportToCSV"/>
+            android:onClick="exportToCSV"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_student_names"
             android:id="@+id/studentNamesButton"
-            android:drawableLeft="@android:drawable/ic_menu_my_calendar"
             android:drawableStart="@android:drawable/ic_menu_my_calendar"
-            android:onClick="editStudentNames"/>
-    </GridLayout>
+            android:onClick="editStudentNames"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/exportCSVButton"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,36 +70,36 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/label_admin"
         android:paddingTop="10dp"
-        android:paddingBottom="3dp"/>
+        android:paddingBottom="3dp"
+        android:paddingStart="4dp"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#c0c0c0"/>
 
-    <GridLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/manual_input"
             android:id="@+id/manualInputButton"
-            android:drawableLeft="@android:drawable/ic_menu_edit"
             android:drawableStart="@android:drawable/ic_menu_edit"
             android:onClick="manualInput"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Password"
+            android:text="@string/change_password"
             android:id="@+id/changePasswordButton"
-            android:drawableLeft="@android:drawable/ic_menu_sort_alphabetically"
             android:drawableStart="@android:drawable/ic_menu_sort_alphabetically"
-            android:onClick="manualInput"/>
-    </GridLayout>
+            android:onClick="showChangePasswordDialog"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -101,19 +107,23 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/label_database"
         android:paddingTop="10dp"
-        android:paddingBottom="3dp"/>
+        android:paddingBottom="3dp"
+        android:paddingStart="4dp"/>
 
-    <GridLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/backup_database"
             android:id="@+id/exportDatabaseButton"
-            android:drawableLeft="@android:drawable/ic_menu_set_as"
             android:drawableStart="@android:drawable/ic_menu_set_as"
             android:onClick="backupDatabase"/>
 
@@ -122,19 +132,21 @@
             android:layout_height="wrap_content"
             android:text="@string/import_database"
             android:id="@+id/importDatabaseButton"
-            android:drawableLeft="@android:drawable/ic_menu_add"
             android:drawableStart="@android:drawable/ic_menu_add"
-            android:onClick="importDatabase"/>
+            android:onClick="importDatabase"
+            android:layout_below="@+id/exportDatabaseButton"
+            android:layout_alignParentStart="true"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear_database"
             android:id="@+id/clearDatabasebutton"
-            android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
             android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
-            android:onClick="clearDatabase"/>
+            android:onClick="clearDatabase"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/exportDatabaseButton"/>
 
-    </GridLayout>
+    </RelativeLayout>
 
 </LinearLayout>
