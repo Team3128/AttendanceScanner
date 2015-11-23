@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.opencsv.CSVWriter;
-
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -45,6 +44,8 @@ public class AttendanceDatabase
 		values.put("inTime", currentDate.getTime());
 
 		db.insert(Tables.ScanTimes.TABLE_NAME, null, values);
+
+		db.close();
 	}
 
 	/**
@@ -61,6 +62,7 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		db.execSQL("UPDATE scanTimes SET outTime=? WHERE rowid=?", new String[]{Long.toString(currentDate.getTime()), Long.toString(scanInRowID)});
+		db.close();
 	}
 
 	public boolean studentExists(int studentID)
@@ -72,6 +74,7 @@ public class AttendanceDatabase
 		boolean retval = cursor.getCount() > 0;
 
 		cursor.close();
+		db.close();
 
 		return retval;
 	}
@@ -95,12 +98,7 @@ public class AttendanceDatabase
 			return null;
 		}
 
-		StringBuilder fullName = new StringBuilder();
-		fullName.append(cursor.getString(cursor.getColumnIndexOrThrow("firstName")));
-		fullName.append(' ');
-		fullName.append(cursor.getString(cursor.getColumnIndexOrThrow("lastName")));
-
-		String nameString = fullName.toString();
+		String nameString = cursor.getString(cursor.getColumnIndexOrThrow("firstName")) + ' ' + cursor.getString(cursor.getColumnIndexOrThrow("lastName"));
 
 		if(nameString.equals(" "))
 		{
@@ -108,6 +106,7 @@ public class AttendanceDatabase
 		}
 
 		cursor.close();
+		db.close();
 
 		return nameString;
 	}
@@ -125,6 +124,8 @@ public class AttendanceDatabase
 
 		// Create a new map of values, where column names are the keys
 		db.execSQL("INSERT INTO Students(studentID, firstName, lastName) VALUES (?, ?, ?)", new String[]{Integer.toString(studentID), firstName, lastName});
+
+		db.close();
 	}
 
 	/**
@@ -140,6 +141,8 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		db.execSQL("UPDATE Students SET firstName=?, lastName=? WHERE studentID=?", new String[]{firstName, lastName, Integer.toString(studentID)});
+
+		db.close();
 	}
 
 	/**
@@ -153,6 +156,8 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		db.execSQL("DELETE FROM Students WHERE studentID=?", new String[]{Integer.toString(studentID)});
+
+		db.close();
 	}
 
 	/**
@@ -163,7 +168,9 @@ public class AttendanceDatabase
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		return db.rawQuery("SELECT rowid AS _id, studentId, firstName, lastName FROM Students", null);
+		Cursor results =  db.rawQuery("SELECT rowid AS _id, studentId, firstName, lastName FROM Students", null);
+
+		return results;
 	}
 
 	/**
@@ -182,7 +189,7 @@ public class AttendanceDatabase
 		Date endDate = calendar.getTime();
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		return db.rawQuery("SELECT \n" +
+		Cursor results =  db.rawQuery("SELECT \n" +
 				"    ScanTimes.rowid AS _id, \n" +
 				"    Students.studentID, \n" +
 				"    Students.firstName, \n" +
@@ -196,6 +203,8 @@ public class AttendanceDatabase
 				"    ScanTimes.inTime BETWEEN ? AND ?\n" +
 				"ORDER BY\n" +
 				"    ScanTimes.inTime\n", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
+
+		return results;
 	}
 
 	/**
@@ -213,7 +222,7 @@ public class AttendanceDatabase
 		Date endDate = calendar.getTime();
 
 		SQLiteDatabase db = helper.getReadableDatabase();
-		return db.rawQuery("SELECT \n" +
+		Cursor results =  db.rawQuery("SELECT \n" +
 				"    Students.rowid AS _id, \n" +
 				"    Students.studentID, \n" +
 				"    Students.firstName, \n" +
@@ -228,6 +237,8 @@ public class AttendanceDatabase
 				"    Students.studentId\n" +
 				"ORDER BY\n" +
 				"    totalTime DESC", new String[]{Long.toString(startDate.getTime()), Long.toString(endDate.getTime())});
+
+		return results;
 	}
 
 	/**
@@ -237,7 +248,7 @@ public class AttendanceDatabase
 	public Cursor getStudentTotalAttendanceTimes()
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
-		return db.rawQuery("SELECT \n" +
+		Cursor results = db.rawQuery("SELECT \n" +
 				"    Students.rowid AS _id, \n" +
 				"    Students.studentID, \n" +
 				"    Students.firstName, \n" +
@@ -250,6 +261,7 @@ public class AttendanceDatabase
 				"    Students.studentId\n" +
 				"ORDER BY\n" +
 				"    totalTime DESC", new String[0]);
+		return results;
 	}
 
 	/**
@@ -270,6 +282,8 @@ public class AttendanceDatabase
 		}
 
 		cursor.close();
+
+		db.close();
 
 		return mostRecentScan;
 	}
@@ -296,6 +310,8 @@ public class AttendanceDatabase
 
 		cursor.close();
 
+		db.close();
+
 		return rowid;
 	}
 
@@ -307,6 +323,9 @@ public class AttendanceDatabase
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		db.execSQL("DELETE FROM scanTimes");
+
+		db.close();
+
 	}
 
 	/**
@@ -327,5 +346,31 @@ public class AttendanceDatabase
 
 		return results;
 
+	}
+
+	public void addScansFromDatabase(File otherDatabase)
+	{
+		SQLiteDatabase db = helper.getWritableDatabase();
+
+		//attach the other database
+		db.execSQL("ATTACH DATABASE '" + otherDatabase.getAbsolutePath() + "' AS otherDB");
+
+		//add any missing students
+		db.execSQL("INSERT OR IGNORE INTO students " +
+				"SELECT * FROM otherDB.students");
+
+		//copy the scans in, ignoing duplicate rows
+		//see http://stackoverflow.com/questions/10703752/skip-over-ignore-duplicate-rows-on-insert
+		db.execSQL("INSERT OR IGNORE INTO scanTimes " +
+				"SELECT otherTimes.studentID, otherTimes.inTime, otherTimes.outTime FROM otherDB.scanTimes AS otherTimes " +
+				"WHERE NOT EXISTS " +
+				"(SELECT 1 FROM scanTimes AS currTimes WHERE otherTimes.studentID=currTimes.studentID " +
+				"AND otherTimes.inTime=currTimes.inTime " +
+				"AND otherTimes.outTime=currTimes.outTime)");
+
+		//detach the other DB
+		db.execSQL("DETACH DATABASE otherDB");
+
+		db.close();
 	}
 }

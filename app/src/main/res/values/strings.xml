@@ -58,6 +58,7 @@
     <string name="new_password_hint">New Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="no_password">No Password</string>
+    <string name="merge_database">Merge Database</string>
 
     <string-array name="csv_export_options">
         <item>Total Times</item>

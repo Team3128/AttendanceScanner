@@ -39,7 +39,8 @@ import java.nio.channels.FileChannel;
 public class MainActivity extends Activity
 {
 
-	private final static int FILE_PICKER_REQUEST_CODE = 1;
+	private final static int IMPORT_FILE_PICKER_REQUEST_CODE = 1;
+	private final static int MERGE_FILE_PICKER_REQUEST_CODE = 2;
 
 	AttendanceDatabase database;
 
@@ -86,12 +87,12 @@ public class MainActivity extends Activity
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
-		if(requestCode == FILE_PICKER_REQUEST_CODE)
+		//check if the user pressed cancel
+		if(intent != null)
 		{
-
-			//check if the user pressed cancel
-			if(intent != null)
+			if (requestCode == IMPORT_FILE_PICKER_REQUEST_CODE)
 			{
+
 				//get the file that was returned
 				Uri fileUri = intent.getData();
 				File file = new File(fileUri.getPath());
@@ -108,8 +109,17 @@ public class MainActivity extends Activity
 					Toast.makeText(this, "Error importing database.  Maybe look at the logcat?", Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
-			}
 
+
+			} else if (requestCode == MERGE_FILE_PICKER_REQUEST_CODE)
+			{
+				Uri fileUri = intent.getData();
+				File otherDB = new File(fileUri.getPath());
+				Log.v("MainActivity", "Merging database " + otherDB.getPath());
+				database.addScansFromDatabase(otherDB);
+
+				Toast.makeText(this, "Merged database successfully!", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -189,7 +199,7 @@ public class MainActivity extends Activity
 		intent.setType("file/*");
 		intent.putExtra("com.estrongs.intent.extra.TITLE", "Import Database");
 
-		startActivityForResult(intent, FILE_PICKER_REQUEST_CODE);
+		startActivityForResult(intent, IMPORT_FILE_PICKER_REQUEST_CODE);
 	}
 
 	public void manualInput(View view)
@@ -388,5 +398,15 @@ public class MainActivity extends Activity
 		confirmPassText.addTextChangedListener(passwordChecker);
 
 	}
+
+	public void mergeDatabase(View view)
+	{
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("file/*");
+		intent.putExtra("com.estrongs.intent.extra.TITLE", "Merge Database");
+
+		startActivityForResult(intent, MERGE_FILE_PICKER_REQUEST_CODE);
+	}
+
 
 }
