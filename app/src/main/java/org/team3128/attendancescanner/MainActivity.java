@@ -338,8 +338,16 @@ public class MainActivity extends Activity
 		View content = getLayoutInflater().inflate(R.layout.dialog_change_password, null);
 		builder.setView(content);
 
-		final TextView inputPassText = (TextView) content.findViewById(R.id.newPassInputText);
+		final TextView oldPassText = (TextView) content.findViewById(R.id.oldPassInputText);
+		final TextView newPassText = (TextView) content.findViewById(R.id.newPassInputText);
 		final TextView confirmPassText = (TextView) content.findViewById(R.id.newPassConfirmText);
+
+		//disable the "old password" textbox if there is no current password
+		final String password = preferences.getString("password", "");
+		if(password.isEmpty())
+		{
+			oldPassText.setEnabled(false);
+		}
 
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 		{
@@ -347,9 +355,12 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				byte[] newPassBytes = PasswordDialog.getHash(inputPassText.getText().toString());
+				byte[] newPassBytes = PasswordDialog.getHash(newPassText.getText().toString());
 
 				preferences.edit().putString("password", Base64.encodeToString(newPassBytes, Base64.NO_WRAP)).apply();
+
+				//update cached password
+				PasswordDialog.lastPasswordHash = newPassBytes;
 			}
 		});
 
@@ -387,14 +398,32 @@ public class MainActivity extends Activity
 			@Override
 			public void afterTextChanged(Editable s)
 			{
-				String newPassword = inputPassText.getText().toString();
+				String oldPassword = oldPassText.getText().toString();
+				String newPassword = newPassText.getText().toString();
 				String confirmPassword = confirmPassText.getText().toString();
 
-				positiveButton.setEnabled(!newPassword.isEmpty() && !confirmPassword.isEmpty() && newPassword.equals(confirmPassword));
+				boolean passwordsMatch = !newPassword.isEmpty() && !confirmPassword.isEmpty() && newPassword.equals(confirmPassword);
+
+				boolean oldPasswordCorrect = false;
+
+
+				if(password.isEmpty())
+				{
+					oldPasswordCorrect = true;
+				}
+				else
+				{
+					byte[] currPasswordBytes = Base64.decode(password, Base64.NO_WRAP);
+
+					oldPasswordCorrect = PasswordDialog.doPasswordsMatch(currPasswordBytes, oldPassword);
+				}
+
+				positiveButton.setEnabled(passwordsMatch && oldPasswordCorrect);
 			}
 		};
 
-		inputPassText.addTextChangedListener(passwordChecker);
+		oldPassText.addTextChangedListener(passwordChecker);
+		newPassText.addTextChangedListener(passwordChecker);
 		confirmPassText.addTextChangedListener(passwordChecker);
 
 	}

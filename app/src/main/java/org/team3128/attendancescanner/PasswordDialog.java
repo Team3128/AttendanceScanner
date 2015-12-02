@@ -1,6 +1,7 @@
 package org.team3128.attendancescanner;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -74,9 +75,9 @@ public class PasswordDialog
 			public void onClick(DialogInterface dialog, int which)
 			{
 
-				gaveCorrectPassword = checkPassword(passwordSHA256, passwordText.getText().toString());
+				gaveCorrectPassword = doPasswordsMatch(passwordSHA256, passwordText.getText().toString());
 
-				if(!gaveCorrectPassword)
+				if (!gaveCorrectPassword)
 				{
 					Toast.makeText(context, R.string.password_incorrect, Toast.LENGTH_SHORT).show();
 
@@ -86,7 +87,12 @@ public class PasswordDialog
 
 		builder.setNegativeButton(android.R.string.cancel, null);
 
-		builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+
+		gaveCorrectPassword = false;
+
+		Dialog dialog = builder.show();
+
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
 		{
 
 			@Override
@@ -100,9 +106,7 @@ public class PasswordDialog
 		});
 
 
-		gaveCorrectPassword = false;
 
-		builder.show();
 	}
 
 	public static byte[] getHash(String toHash)
@@ -126,7 +130,7 @@ public class PasswordDialog
 	 * @param correctPassword the sha256 sum of the correct password
 	 * @param enteredPassword the plaintext entered password
 	 */
-	private static boolean checkPassword(byte[] correctPassword, String enteredPassword)
+	public static boolean doPasswordsMatch(byte[] correctPassword, String enteredPassword)
 	{
 		byte[] enteredHash = getHash(enteredPassword);
 		lastPasswordHash = enteredHash;
