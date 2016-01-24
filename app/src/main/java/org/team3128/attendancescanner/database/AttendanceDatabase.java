@@ -359,6 +359,12 @@ public class AttendanceDatabase
 		db.execSQL("INSERT OR IGNORE INTO students " +
 				"SELECT * FROM otherDB.students");
 
+		//import names of students that do not have them
+		db.execSQL("UPDATE students SET firstName=otherDB.firstName WHERE" +
+				" firstName='' AND otherDB.firstName!=''");
+		db.execSQL("UPDATE students SET lastName=otherDB.lastName WHERE" +
+				" lastName='' AND otherDB.lastName!=''");
+
 		//copy the scans in, ignoing duplicate rows
 		//see http://stackoverflow.com/questions/10703752/skip-over-ignore-duplicate-rows-on-insert
 		db.execSQL("INSERT OR IGNORE INTO scanTimes " +
