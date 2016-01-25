@@ -18,8 +18,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.opencsv.CSVWriter;
@@ -34,6 +36,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 public class AdminActivity extends Activity
@@ -212,6 +218,18 @@ public class AdminActivity extends Activity
 		builder.setTitle(R.string.manual_enter_student_id_title);
 
 		final EditText studentIDText = (EditText) content.findViewById(R.id.studentIDText);
+		final CheckBox backdateCheckbox = (CheckBox) content.findViewById(R.id.backdateCheckbox);
+		final TimePicker backdateTimePicker = (TimePicker) content.findViewById(R.id.backdateTimePicker);
+
+		backdateCheckbox.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				backdateTimePicker.setVisibility(((CheckBox)v).isChecked() ? View.VISIBLE : View.GONE);
+			}
+		});
+
 
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 		{
@@ -219,7 +237,22 @@ public class AdminActivity extends Activity
 			public void onClick(DialogInterface dialog, int which)
 			{
 				String studentID = studentIDText.getText().toString();
-				String message = ScannerActivity.processScan(database, studentID);
+
+				Date scanOutTime = null;
+
+				if(backdateCheckbox.isChecked())
+				{
+					Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+					cal.set(Calendar.HOUR_OF_DAY, backdateTimePicker.getCurrentHour());
+					cal.set(Calendar.MINUTE, backdateTimePicker.getCurrentMinute());
+					cal.set(Calendar.SECOND, 0);
+
+					Log.d("AdminActivity", "Backdating student at " + DateFormat.getTimeInstance().format(cal.getTime()));
+
+					scanOutTime = cal.getTime();
+				}
+
+				String message = ScannerActivity.processScan(database, studentID, scanOutTime);
 
 				Toast.makeText(AdminActivity.this, message, Toast.LENGTH_LONG).show();
 			}

@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import org.team3128.attendancescanner.AdminActivity;
+import org.team3128.attendancescanner.Pair;
 import org.team3128.attendancescanner.R;
 import org.team3128.attendancescanner.TotalAttendanceActivity;
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 
@@ -53,12 +56,21 @@ public class ScannerActivity extends Activity
 	 *
 	 * It is public and static so that it can be used by other activities
 	 * @param barcodeNumber the string form of the input student ID
+	 * @param scanTime the time that the student scanned in or out.  If null, the current time will be used.
 	 * @return the result message which should be shown to the user
 	 */
-	public static String processScan(AttendanceDatabase database, String barcodeNumber)
+	public static String processScan(AttendanceDatabase database, String barcodeNumber, Date scanTime)
 	{
 
 		String result = null;
+
+		if(scanTime == null)
+		{
+			//get the current UTC time
+			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+			scanTime = cal.getTime();
+		}
+
 
 		if(barcodeNumber != null)
 		{
@@ -71,17 +83,25 @@ public class ScannerActivity extends Activity
 				Calendar recentScanCutoff = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 				recentScanCutoff.add(Calendar.HOUR, -12);
 
-				Long scanInRowID = database.getMostRecentScanIn(id, recentScanCutoff.getTime());
+				Pair<Long, Date> recentScanData = database.getMostRecentScanIn(id, recentScanCutoff.getTime());
 
-				result = "Scanned " + (name != null ? name : id) + (scanInRowID != null ? " out.\n" : " in.\n");
+				result = "Scanned " + (name != null ? name : id) + (recentScanData != null ? " out.\n" : " in.\n");
 
-				if(scanInRowID != null)
+				if(recentScanData != null)
 				{
-					database.addScanOut(scanInRowID);
+					//make sure the user hasn't backdated the out scan to be earlier than the in scan
+					if(recentScanData.right.compareTo(scanTime) > 0)
+					{
+						return "Scan out time is earlier than the in time (" + DateFormat.getTimeInstance().format(recentScanData.right) + ")! Are you a time traveler, or did you backdate wrong?";
+					}
+					else
+					{
+						database.addScanOut(recentScanData.left, scanTime);
+					}
 				}
 				else
 				{
-					database.addScanIn(id);
+					database.addScanIn(id, scanTime);
 				}
 			}
 			catch(NumberFormatException ex)

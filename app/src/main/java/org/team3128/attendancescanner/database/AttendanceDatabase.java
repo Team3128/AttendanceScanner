@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import org.team3128.attendancescanner.Pair;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,16 +26,13 @@ public class AttendanceDatabase
 		helper = new AttendanceOpenHelper(context);
 	}
 
-	public void addScanIn(int studentID)
+	public void addScanIn(int studentID, Date inTime)
 	{
 		if(!studentExists(studentID))
 		{
 			Log.d("AttendanceDatabase", "Auto-adding student with ID " + studentID);
 			addStudent(studentID, "", "");
 		}
-		//get the current UTC time
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		Date currentDate = cal.getTime();
 
 		// Gets the data repository in write mode
 		SQLiteDatabase db = helper.getWritableDatabase();
@@ -41,7 +40,7 @@ public class AttendanceDatabase
 		// Create a new map of values, where column names are the keys
 		ContentValues values = new ContentValues();
 		values.put("studentID", studentID);
-		values.put("inTime", currentDate.getTime());
+		values.put("inTime", inTime.getTime());
 
 		db.insert(Tables.ScanTimes.TABLE_NAME, null, values);
 
@@ -51,17 +50,14 @@ public class AttendanceDatabase
 	/**
 	 * Scans the student out.  Takes the rowid of their last scan in as a parameter
 	 * @param scanInRowID
+	 * @param outTime the time that the student scanned out
 	 */
-	public void addScanOut(long scanInRowID)
+	public void addScanOut(long scanInRowID, Date outTime)
 	{
-		//get the current UTC time
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		Date currentDate = cal.getTime();
-
 		// Gets the data repository in write mode
 		SQLiteDatabase db = helper.getWritableDatabase();
 
-		db.execSQL("UPDATE scanTimes SET outTime=? WHERE rowid=?", new String[]{Long.toString(currentDate.getTime()), Long.toString(scanInRowID)});
+		db.execSQL("UPDATE scanTimes SET outTime=? WHERE rowid=?", new String[]{Long.toString(outTime.getTime()), Long.toString(scanInRowID)});
 		db.close();
 	}
 
@@ -289,30 +285,33 @@ public class AttendanceDatabase
 	}
 
 	/**
-	 * Get the rowid of the most recent scan in by the provided student.
+	 * Get the rowid and time of the most recent scan in by the provided student.
 	 * If there is no scan or the scan is before recentScanCutoff, then
 	 * returns null
 	 */
-	public Long getMostRecentScanIn(int studentID, Date recentScanCutoff)
+	public Pair<Long, Date> getMostRecentScanIn(int studentID, Date recentScanCutoff)
 	{
 		SQLiteDatabase db = helper.getReadableDatabase();
 
-		Cursor cursor = db.rawQuery("SELECT rowid FROM scanTimes WHERE " +
+		Cursor cursor = db.rawQuery("SELECT rowid, inTime FROM scanTimes WHERE " +
 				"studentID = ? AND outTime IS NULL AND inTime > ?", new String[]{Integer.toString(studentID), Long.toString(recentScanCutoff.getTime())});
 
 		cursor.moveToFirst();
-		Long rowid = null;
+
+		Pair<Long, Date> retval = null;
 
 		if(cursor.getCount() > 0)
 		{
-			rowid = cursor.getLong(cursor.getColumnIndexOrThrow("rowid"));
+			Long rowid = cursor.getLong(cursor.getColumnIndexOrThrow("rowid"));
+			Date scanTime = new Date(cursor.getLong(cursor.getColumnIndexOrThrow("inTime")));
+			retval = new Pair<Long, Date>(rowid, scanTime);
 		}
 
 		cursor.close();
 
 		db.close();
 
-		return rowid;
+		return retval;
 	}
 
 	/**

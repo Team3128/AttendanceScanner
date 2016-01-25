@@ -62,7 +62,7 @@ public class USBScannerFragment extends Fragment
 		//sent after a barcode has been typed in by the scanner
 		if(keyCode == KeyEvent.KEYCODE_SPACE)
 		{
-			scanOutputText.setText(ScannerActivity.processScan(((ScannerActivity)getActivity()).database, numberCollector.toString()));
+			scanOutputText.setText(ScannerActivity.processScan(((ScannerActivity)getActivity()).database, numberCollector.toString(), null));
 			numberCollector.setLength(0); //reset string builder
 		}
 		else if(Character.isDigit(pressed))

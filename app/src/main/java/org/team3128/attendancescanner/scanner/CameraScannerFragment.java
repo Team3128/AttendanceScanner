@@ -67,7 +67,7 @@ public class CameraScannerFragment extends Fragment implements ZXingScannerView.
 
 		if (result != null)
 		{
-			toastMessage = ScannerActivity.processScan(((ScannerActivity)getActivity()).database, result.getText());
+			toastMessage = ScannerActivity.processScan(((ScannerActivity)getActivity()).database, result.getText(), null);
 		}
 		else
 		{

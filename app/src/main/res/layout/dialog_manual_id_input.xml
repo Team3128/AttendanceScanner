@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
                 android:gravity="center_horizontal">
 
     <TextView
@@ -12,7 +11,11 @@
         android:textSize="16sp"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:labelFor="@id/studentIDText"/>
+        android:labelFor="@id/studentIDText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/manualIDInstructionsText"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -20,5 +23,26 @@
         android:ems="8"
         android:id="@+id/studentIDText"
         android:inputType="numberSigned"
-        />
-</LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/manualIDInstructionsText"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_backdate"
+        android:id="@+id/backdateCheckbox"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/studentIDText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backdateTimePicker"
+        android:layout_alignTop="@+id/backdateCheckbox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>
