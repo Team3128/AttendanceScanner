@@ -1,14 +1,8 @@
 package org.team3128.attendancescanner.scanner;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +14,9 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
-import org.team3128.attendancescanner.MainActivity;
 import org.team3128.attendancescanner.R;
-import org.team3128.attendancescanner.database.AttendanceDatabase;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 

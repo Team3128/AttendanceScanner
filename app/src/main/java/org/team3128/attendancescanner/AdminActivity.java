@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 
-public class MainActivity extends Activity
+public class AdminActivity extends Activity
 {
 
 	private final static int IMPORT_FILE_PICKER_REQUEST_CODE = 1;
@@ -96,8 +96,8 @@ public class MainActivity extends Activity
 				//get the file that was returned
 				Uri fileUri = intent.getData();
 				File file = new File(fileUri.getPath());
-				Log.v("MainActivity", "Loading new database " + file.getPath());
-				Log.v("MainActivity", "File exists: " + file.exists());
+				Log.v("AdminActivity", "Loading new database " + file.getPath());
+				Log.v("AdminActivity", "File exists: " + file.exists());
 				File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
 				try
 				{
@@ -115,8 +115,8 @@ public class MainActivity extends Activity
 			{
 				Uri fileUri = intent.getData();
 				File otherDB = new File(fileUri.getPath());
-				Log.v("MainActivity", "Merging database " + otherDB.getPath());
-				database.addScansFromDatabase(otherDB);
+				Log.v("AdminActivity", "Merging database " + otherDB.getPath());
+				database.mergeDatabase(otherDB);
 
 				Toast.makeText(this, "Merged database successfully!", Toast.LENGTH_SHORT).show();
 			}
@@ -149,7 +149,7 @@ public class MainActivity extends Activity
 		File backupLocation = new File(Environment.getExternalStorageDirectory(), AttendanceOpenHelper.DATABASE_NAME);
 		File database = new File(getApplicationInfo().dataDir + "/databases/" + AttendanceOpenHelper.DATABASE_NAME);
 
-		Log.d("MainActivity", "Attempting to copy " + database.getPath() + " to " + backupLocation.getPath());
+		Log.d("AdminActivity", "Attempting to copy " + database.getPath() + " to " + backupLocation.getPath());
 		if(database.exists())
 		{
 			try
@@ -159,7 +159,7 @@ public class MainActivity extends Activity
 			}
 			catch (IOException e)
 			{
-				Log.e("MainActivity", "Error backing up database to " + backupLocation.getPath());
+				Log.e("AdminActivity", "Error backing up database to " + backupLocation.getPath());
 				e.printStackTrace();
 
 				Toast.makeText(this, "Error backing up database: Can't copy file.", Toast.LENGTH_LONG).show();
@@ -169,7 +169,7 @@ public class MainActivity extends Activity
 		}
 		else
 		{
-			Log.e("MainActivity", "Could not back up database: database not found or can't write to output file.");
+			Log.e("AdminActivity", "Could not back up database: database not found or can't write to output file.");
 
 			Toast.makeText(this, "Error backing up database: Database doesn't exist.", Toast.LENGTH_LONG).show();
 		}
@@ -221,7 +221,7 @@ public class MainActivity extends Activity
 				String studentID = studentIDText.getText().toString();
 				String message = ScannerActivity.processScan(database, studentID);
 
-				Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+				Toast.makeText(AdminActivity.this, message, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -244,7 +244,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(AdminActivity.this);
 
 				builder.setTitle(R.string.areyoureallysure);
 				builder.setMessage(R.string.might_want_this_someday);
@@ -257,7 +257,7 @@ public class MainActivity extends Activity
 					{
 						database.clearScansTable();
 
-						Toast.makeText(MainActivity.this, "Scan database cleared.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(AdminActivity.this, "Scan database cleared.", Toast.LENGTH_SHORT).show();
 					}
 				});
 

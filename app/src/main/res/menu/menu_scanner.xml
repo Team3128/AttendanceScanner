@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context="org.team3128.attendancescanner.AttendanceActivity">
-      <item android:id="@+id/action_admin_interface"
-            android:title="@string/admin_interface"
-            android:showAsAction="ifRoom|withText"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.team3128.attendancescanner.AttendanceActivity">
+    <item android:id="@+id/action_admin_interface"
+        android:title="@string/admin_interface"
+        android:showAsAction="ifRoom|withText"
+        android:orderInCategory="11"/>
+    <item android:id="@+id/action_view_totals"
+        android:title="@string/menu_view_totals"
+        android:showAsAction="ifRoom|withText"
+        android:orderInCategory="10"/>
 </menu>

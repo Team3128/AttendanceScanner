@@ -2,18 +2,16 @@ package org.team3128.attendancescanner.scanner;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import org.team3128.attendancescanner.MainActivity;
+import org.team3128.attendancescanner.AdminActivity;
 import org.team3128.attendancescanner.R;
+import org.team3128.attendancescanner.TotalAttendanceActivity;
 import org.team3128.attendancescanner.database.AttendanceDatabase;
 
 import java.util.Calendar;
@@ -120,7 +118,11 @@ public class ScannerActivity extends Activity
 	{
 		if(item.getItemId() == R.id.action_admin_interface)
 		{
-			startActivity(new Intent(this, MainActivity.class));
+			startActivity(new Intent(this, AdminActivity.class));
+		}
+		else if(item.getItemId() == R.id.action_view_totals)
+		{
+			startActivity(new Intent(this, TotalAttendanceActivity.class));
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -348,22 +348,16 @@ public class AttendanceDatabase
 
 	}
 
-	public void addScansFromDatabase(File otherDatabase)
+	public void mergeDatabase(File otherDatabase)
 	{
 		SQLiteDatabase db = helper.getWritableDatabase();
 
 		//attach the other database
 		db.execSQL("ATTACH DATABASE '" + otherDatabase.getAbsolutePath() + "' AS otherDB");
 
-		//add any missing students
-		db.execSQL("INSERT OR IGNORE INTO students " +
-				"SELECT * FROM otherDB.students");
-
-		//import names of students that do not have them
-		db.execSQL("UPDATE students SET firstName=otherDB.firstName WHERE" +
-				" firstName='' AND otherDB.firstName!=''");
-		db.execSQL("UPDATE students SET lastName=otherDB.lastName WHERE" +
-				" lastName='' AND otherDB.lastName!=''");
+		//add its students
+		db.execSQL("INSERT OR REPLACE INTO students SELECT * FROM otherDB.students AS otherStudents WHERE NOT (otherStudents.firstName = '' " +
+				"AND EXISTS (SELECT studentID from students WHERE students.studentID=otherStudents.studentID))");
 
 		//copy the scans in, ignoing duplicate rows
 		//see http://stackoverflow.com/questions/10703752/skip-over-ignore-duplicate-rows-on-insert

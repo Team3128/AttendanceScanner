@@ -60,6 +60,7 @@
     <string name="no_password">No Password</string>
     <string name="merge_database">Merge Database</string>
     <string name="old_password_hint">Old Password</string>
+    <string name="menu_view_totals">Leaderboards</string>
 
     <string-array name="csv_export_options">
         <item>Total Times</item>
