@@ -11,16 +11,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -362,103 +358,6 @@ public class AdminActivity extends Activity
 			Toast.makeText(this, "Error exporting", Toast.LENGTH_SHORT).show();
 			ex.printStackTrace();
 		}
-	}
-
-	public void showChangePasswordDialog(View view)
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-		builder.setTitle(R.string.change_password);
-		View content = getLayoutInflater().inflate(R.layout.dialog_change_password, null);
-		builder.setView(content);
-
-		final TextView oldPassText = (TextView) content.findViewById(R.id.oldPassInputText);
-		final TextView newPassText = (TextView) content.findViewById(R.id.newPassInputText);
-		final TextView confirmPassText = (TextView) content.findViewById(R.id.newPassConfirmText);
-
-		//disable the "old password" textbox if there is no current password
-		final String password = preferences.getString("password", "");
-		if(password.isEmpty())
-		{
-			oldPassText.setEnabled(false);
-		}
-
-		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-		{
-
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				byte[] newPassBytes = PasswordDialog.getHash(newPassText.getText().toString());
-
-				preferences.edit().putString("password", Base64.encodeToString(newPassBytes, Base64.NO_WRAP)).apply();
-
-				//update cached password
-				PasswordDialog.lastPasswordHash = newPassBytes;
-			}
-		});
-
-		builder.setNeutralButton(R.string.no_password, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				preferences.edit().putString("password", "").apply();
-			}
-		});
-
-		builder.setNegativeButton(android.R.string.cancel, null);
-
-		//-----------------------------------------------------------------
-		AlertDialog changePassDialog = builder.show();
-		final Button positiveButton = changePassDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-		positiveButton.setEnabled(false);
-
-		final TextWatcher passwordChecker = new TextWatcher()
-		{
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after)
-			{
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count)
-			{
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s)
-			{
-				String oldPassword = oldPassText.getText().toString();
-				String newPassword = newPassText.getText().toString();
-				String confirmPassword = confirmPassText.getText().toString();
-
-				boolean passwordsMatch = !newPassword.isEmpty() && !confirmPassword.isEmpty() && newPassword.equals(confirmPassword);
-
-				boolean oldPasswordCorrect = false;
-
-
-				if(password.isEmpty())
-				{
-					oldPasswordCorrect = true;
-				}
-				else
-				{
-					byte[] currPasswordBytes = Base64.decode(password, Base64.NO_WRAP);
-
-					oldPasswordCorrect = PasswordDialog.doPasswordsMatch(currPasswordBytes, oldPassword);
-				}
-
-				positiveButton.setEnabled(passwordsMatch && oldPasswordCorrect);
-			}
-		};
-
-		oldPassText.addTextChangedListener(passwordChecker);
-		newPassText.addTextChangedListener(passwordChecker);
-		confirmPassText.addTextChangedListener(passwordChecker);
-
 	}
 
 	public void mergeDatabase(View view)

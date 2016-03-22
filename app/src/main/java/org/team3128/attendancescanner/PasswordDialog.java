@@ -22,8 +22,10 @@ import java.util.Arrays;
  */
 public class PasswordDialog
 {
+	final static String PASSWORD_HASH_PREFS_KEY = "password";
+
 	/**
-	 * Used to remember the password entered so it can be saved in onSaveInstanceState
+	 * Used to remember the password entered so it can be saved in onSaveInstanceState and used to re-unlock if the screen rotates.
 	 */
 	static byte[] lastPasswordHash;
 
